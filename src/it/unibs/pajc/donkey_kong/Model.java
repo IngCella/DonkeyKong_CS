@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 public class Model extends Observable {
 
     public final int GameWidth = 750;  // Larghezza Finestra
-    public final int GameHeight = 600; // Altezza Finestra
+    public final int GameHeight = 600; // Altezza Window
 
     private Random random;
 
