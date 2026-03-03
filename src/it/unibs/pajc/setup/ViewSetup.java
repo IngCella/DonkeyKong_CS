@@ -1,18 +1,12 @@
 package it.unibs.pajc.setup;
 
 import java.awt.*;
-import java.io.IOException;
+import java.awt.event.ActionListener;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class ViewSetup {
 
@@ -29,6 +23,32 @@ public class ViewSetup {
 	public ViewSetup(ModelSetup model) {
 		initialize();
 		this.model = model;
+		
+		pnlConfig.getTxtUsername().setText(model.getUsername());
+		pnlConfig.getTxtIP().setText(model.getIpAddress());
+		pnlConfig.getTxtPort().setText("" + model.getPort());
+		
+		// Client
+        model.addPropertyChangeListener(ModelSetup.PROP_USERNAME, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+            		pnlConfig.getTxtUsername().setText(model.getUsername());
+            }
+        });
+
+        model.addPropertyChangeListener(ModelSetup.PROP_IPADDRESS, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+            		pnlConfig.getTxtIP().setText(model.getIpAddress());
+            }
+        });
+
+        model.addPropertyChangeListener(ModelSetup.PROP_PORT, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+            		pnlConfig.getTxtPort().setText("" + model.getPort());
+            }
+        });
 	}
 
 	/**
@@ -56,8 +76,31 @@ public class ViewSetup {
         frame.setVisible(true);
 	}
 	
-	public void pippo(boolean isHost) {
-		pnlConfig.setHost(isHost);
-	}
+	// Listeners
+	public void addBtnJoinListener(ActionListener actionListener) {
+		pnlConfig.getBtnStart().addActionListener(actionListener);
+    }
+
+	// Getters
+    public String getUsername() {
+        return pnlConfig.getTxtUsername().getText();
+    }
+
+    public String getIpAddress() {
+        return pnlConfig.getTxtIP().getText();
+    }
+
+    public int getPort() {
+        int port = 55555;
+        
+        try {
+            port = Integer.parseInt(pnlConfig.getTxtPort().getText(), 10);
+        } 
+        catch (NumberFormatException e) {
+            System.out.println("Errore lettura porta, usata 55555");
+        }
+        
+        return port;
+    }
 	
 }

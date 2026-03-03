@@ -7,10 +7,12 @@ public class PnlConfig extends JPanel {
 
     private Image background;
     private boolean isHost;
-
-    public void setHost(boolean b) {
-		this.isHost = b;
-	}
+    
+    private JTextField txtUsername;
+    private JTextField txtIP;
+    private JTextField txtPort;
+    
+    private JButton btnStart;
 
 	public PnlConfig(CardLayout cardLayout, JPanel mainPanel) {
 
@@ -24,7 +26,7 @@ public class PnlConfig extends JPanel {
         lblUsername.setForeground(Color.BLACK);
         add(lblUsername);
 
-        JTextField txtUsername = new JTextField();
+        txtUsername = new JTextField();
         txtUsername.setBounds(250, 175, 200, 30);
         add(txtUsername);
 
@@ -33,7 +35,7 @@ public class PnlConfig extends JPanel {
         lblIP.setFont(new Font("Monospaced", Font.BOLD, 16));
         add(lblIP);
 
-        JTextField txtIP = new JTextField("192.168.0.10");
+        txtIP = new JTextField("192.168.0.10");
         txtIP.setBounds(250, 245, 200, 30);
         add(txtIP);
 
@@ -42,7 +44,7 @@ public class PnlConfig extends JPanel {
         lblPort.setFont(new Font("Monospaced", Font.BOLD, 16));
         add(lblPort);
 
-        JTextField txtPort = new JTextField();
+        txtPort = new JTextField();
         txtPort.setBounds(250, 315, 200, 30);
         add(txtPort);
 
@@ -51,7 +53,7 @@ public class PnlConfig extends JPanel {
         styleGameButton(btnBack);
         add(btnBack);
 
-        JButton btnStart = new JButton("START!");
+        btnStart = new JButton("START!");
         btnStart.setBounds(540, 460, 130, 45);
         styleGameButton(btnStart);
         add(btnStart);
@@ -72,7 +74,23 @@ public class PnlConfig extends JPanel {
         g2.drawImage(background, 0, 0, getWidth(), getHeight(), this);
     }
 
-    private void styleGameButton(JButton button) {
+    public JTextField getTxtUsername() {
+		return txtUsername;
+	}
+
+	public JTextField getTxtIP() {
+		return txtIP;
+	}
+
+	public JTextField getTxtPort() {
+		return txtPort;
+	}
+	
+	public JButton getBtnStart() {
+		return btnStart;
+	}
+
+	private void styleGameButton(JButton button) {
 
         button.setFocusPainted(false);
         button.setContentAreaFilled(false);

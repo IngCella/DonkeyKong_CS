@@ -11,25 +11,15 @@ public class ModelSetup {
     
     private transient final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
-    // Client
-    private String clientName = "Client";
-    public static final String PROP_CLIENTNAME = "clientName";
+    // User
+    private String username = "Client";
+    public static final String PROP_USERNAME = "username";
     
-    private String clientIP = "0.0.0.0";
-    public static final String PROP_CLIENTIP = "clientIP";
+    private String ipAddress = "0.0.0.0";
+    public static final String PROP_IPADDRESS = "ipAddress";
     
-    private int clientPort = 55555;
-    public static final String PROP_CLIENTPORT = "clientPort";
-    
-    // Server
-    private String serverName = "Server";
-    public static final String PROP_SERVERNAME = "serverName";
-    
-    private String serverIP = "0.0.0.0";
-    public static final String PROP_SERVERIP = "serverIP";
-    
-    private int serverPort = 55555;
-    public static final String PROP_SERVERPORT = "serverPort";
+    private int port = 55555;
+    public static final String PROP_PORT = "port";
     
     // PCS
     public void addPropertyChangeListener(String property, PropertyChangeListener listener) {
@@ -41,74 +31,42 @@ public class ModelSetup {
     }
     
     // Client Name
-    public String getClientName() {
-        return clientName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setClientName(String clientName) {
-        String oldName = this.clientName;
-        this.clientName = clientName;
-        pcs.firePropertyChange(PROP_CLIENTNAME, oldName, clientName);
+    public void setUsername(String username) {
+        String oldUsername = this.username;
+        this.username = username;
+        pcs.firePropertyChange(PROP_USERNAME, oldUsername, username);
     }
 
     // Client IP
-    public String getClientIP() {
-        return clientIP;
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public void setClientIP(String clientIP) {
-        String oldClientIP = this.clientIP;
-        this.clientIP = clientIP;
-        pcs.firePropertyChange(PROP_CLIENTIP, oldClientIP, clientIP);
+    public void setIpAddress(String ipAddress) {
+        String oldIpAddress = this.ipAddress;
+        this.ipAddress = ipAddress;
+        pcs.firePropertyChange(PROP_IPADDRESS, oldIpAddress, ipAddress);
     }
     
     // Client Port
-    public int getClientPort() {
-        return clientPort;
+    public int getPort() {
+        return port;
     }
 
-    public void setClientPort(int clientPort) {
-        int oldClientPort = this.clientPort;
-        this.clientPort = clientPort;
-        pcs.firePropertyChange(PROP_CLIENTPORT, oldClientPort, clientPort);
-    }
-    
-    // Server Name
-    public String getServerName() {
-        return serverName;
-    }
-
-    public void setServerName(String serverName) {
-        String oldServerName = this.serverName;
-        this.serverName = serverName;
-        pcs.firePropertyChange(PROP_SERVERNAME, oldServerName, serverName);
-    }
-    
-    // Server IP
-    public String getServerIP() {
-        return serverIP;
-    }
-
-    public void setServerIP(String serverIP) {
-        String oldServerIP = this.serverIP;
-        this.serverIP = serverIP;
-        pcs.firePropertyChange(PROP_SERVERIP, oldServerIP, serverIP);
-    }
-    
-    // Server Port
-    public int getServerPort() {
-        return serverPort;
-    }
-
-    public void setServerPort(int serverPort) {
-        int oldServerPort = this.serverPort;
-        this.serverPort = serverPort;
-        pcs.firePropertyChange(PROP_SERVERPORT, oldServerPort, serverPort);
+    public void setPort(int port) {
+        int oldPort = this.port;
+        this.port = port;
+        pcs.firePropertyChange(PROP_PORT, oldPort, port);
     }
     
     public ModelSetup() {
         try {
-            this.serverIP = InetAddress.getLocalHost().getHostAddress();
+        		// TODO
+            this.ipAddress = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException ex) {
             Logger.getLogger(ModelSetup.class.getName()).log(Level.SEVERE, null, ex);
         }
