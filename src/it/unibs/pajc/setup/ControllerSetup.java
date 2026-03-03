@@ -3,46 +3,45 @@ package it.unibs.pajc.setup;
 import java.awt.event.ActionListener;
 
 public class ControllerSetup {
-    private final ModelSetup setupModel;
-    private final ViewSetup setupView;
+    private final ModelSetup modelSetup;
+    private final ViewSetup viewSetup;
 
     public ControllerSetup(ModelSetup model, ViewSetup view) {
-        this.setupModel = model;
-        this.setupView = view;
+        this.modelSetup = model;
+        this.viewSetup = view;
     }
-/*
-    public void addBtnJoinListener(ActionListener actionListener) {
-        setupView.addBtnJoinListener(actionListener);
+    
+    public void addBtnStartListener(ActionListener actionListener) {
+        viewSetup.addBtnStartListener(actionListener);
     }
-
-    public void addBtnListenListener(ActionListener actionListener) {
-        setupView.addBtnListenListener(actionListener);
+    
+    public void addBtnGoListener(ActionListener actionListener) {
+        viewSetup.addBtnGoListener(actionListener);
     }
     
     public void setVisible(boolean b) {
-        setupView.setVisible(b);
+        viewSetup.setVisible(b);
     }
     
     // Getters Client
     public String getClientName(){
-        return setupView.getClientName();
+        return viewSetup.getClientUsername();
     }
     
     public String getClientIP(){
-        return setupView.getClientIP();
+        return viewSetup.getClientIP();
     }
     
     public int getClientPort(){
-        return setupView.getClientPort();
+        return viewSetup.getClientPort();
     }
     
     // Getters Server
     public String getServerName(){
-        return setupView.getServerName();
+        return viewSetup.getServerUsername();
     }
     
     public int getServerPort(){
-        return setupView.getServerPort();
+        return viewSetup.getServerPort();
     }
-    */
 }

@@ -8,10 +8,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
+import it.unibs.pajc.setup.ControllerSetup;
+
 public class Controller {
 
     private final Model model;
     private final View view;
+    private final ControllerSetup controllerSetup;
 
     String[] resume = {"Resume"};
     String[] quit = {"Quit"};
@@ -20,9 +23,10 @@ public class Controller {
 
     private Timer timer;
 
-    public Controller(Model model, View view) {
+    public Controller(Model model, View view, ControllerSetup controllerSetup) {
         this.model = model;
         this.view = view;
+        this.controllerSetup = controllerSetup;
 
         // Timer che ripete l'update (delay = 16 = 62fps)
         timer = new Timer(16, new ActionListener() {
@@ -34,6 +38,16 @@ public class Controller {
         });
 
         timer.start();
+        
+        // Listener di Listen (quindi Server)
+        controllerSetup.addBtnStartListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+            		// Fare un metodo che controlli che i dati inseriti siano validi e che, nel caso non vadano bene
+            		// venga inserito nelle textfield una scritta rossa magari che avvisi l'errore che quando si vuole scrivere sparisce
+            		System.out.println("SONO IL CONTROLLER E TU SEI " + controllerSetup.getServerName());
+            }
+        });
 
         // Quando viene premuto ESC chiude la finestra
         view.addKeyListener(new KeyAdapter() {

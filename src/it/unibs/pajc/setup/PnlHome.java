@@ -9,9 +9,7 @@ public class PnlHome extends JPanel {
 
     public PnlHome(CardLayout cardLayout, JPanel mainPanel) {
 
-        // Caricamento immagine
-        background = new ImageIcon( getClass().getResource("/it/unibs/pajc/assets/home.jpg")).getImage();
-
+        background = new ImageIcon(getClass().getResource("/it/unibs/pajc/assets/home.jpg")).getImage();
         setLayout(null);
 
         JButton btnHost = createGameButton("HOST GAME");
@@ -22,13 +20,9 @@ public class PnlHome extends JPanel {
         btnJoin.setBounds(220, 300, 260, 60);
         add(btnJoin);
         
-        btnHost.addActionListener(e -> activeConfig(cardLayout, mainPanel, true)); //true server
-        btnJoin.addActionListener(e -> activeConfig(cardLayout, mainPanel, false)); //false client
+        btnHost.addActionListener(e -> cardLayout.show(mainPanel, "SERVER"));
+        btnJoin.addActionListener(e -> cardLayout.show(mainPanel, "CLIENT"));
     }
-
-	private void activeConfig(CardLayout cardLayout, JPanel mainPanel, boolean isHost) {
-		cardLayout.show(mainPanel, "CONFIG");
-	}
 
     @Override
     protected void paintComponent(Graphics g) {

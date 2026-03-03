@@ -7,14 +7,18 @@ import it.unibs.pajc.setup.*;
 public class DonkeyKong {
 
     public static void main(String[] args) throws UnknownHostException {
-        ModelSetup model = new ModelSetup();
-        ViewSetup view = new ViewSetup(model);
-        ControllerSetup controller = new ControllerSetup(model, view);
+        ModelSetup modelSetup = new ModelSetup();
+        ViewSetup viewSetup = new ViewSetup(modelSetup);
+        ControllerSetup controllerSetup = new ControllerSetup(modelSetup, viewSetup);
+        
+        Model model = new Model();
+        View view = new View(model);
+        Controller controller = new Controller(model, view, controllerSetup);
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                view.frame.setVisible(true);
+                viewSetup.frame.setVisible(true);
             }
         });
     }

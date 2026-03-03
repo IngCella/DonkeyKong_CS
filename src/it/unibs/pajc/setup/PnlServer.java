@@ -3,52 +3,61 @@ package it.unibs.pajc.setup;
 import javax.swing.*;
 import java.awt.*;
 
-public class PnlConfig extends JPanel {
+public class PnlServer extends JPanel {
 
     private Image background;
-    private boolean isHost;
     
-    private JTextField txtUsername;
-    private JTextField txtIP;
-    private JTextField txtPort;
+    private JTextField txtServerUsername;
+    private JTextField txtServerIP;
+    private JTextField txtServerPort;
     
     private JButton btnStart;
 
-	public PnlConfig(CardLayout cardLayout, JPanel mainPanel) {
+	public PnlServer(CardLayout cardLayout, JPanel mainPanel) {
 
         background = new ImageIcon(getClass().getResource("/it/unibs/pajc/assets/home.jpg") ).getImage();
-
         setLayout(null);
+        
+        int y_position = 195;
+        int gapLblTxt = 25;
+        int gapBlock = 45;
 
         JLabel lblUsername = new JLabel("Username");
-        lblUsername.setBounds(250, 150, 200, 25);
+        lblUsername.setBounds(250, y_position, 200, 25);
         lblUsername.setFont(new Font("Monospaced", Font.BOLD, 16));
         lblUsername.setForeground(Color.BLACK);
         add(lblUsername);
 
-        txtUsername = new JTextField();
-        txtUsername.setBounds(250, 175, 200, 30);
-        add(txtUsername);
+        y_position += gapLblTxt;
+        txtServerUsername = new JTextField();
+        txtServerUsername.setBounds(250, y_position, 200, 30);
+        add(txtServerUsername);
 
+        y_position += gapBlock;
         JLabel lblIP = new JLabel("Your IP");
-        lblIP.setBounds(250, 220, 200, 25);
+        lblIP.setBounds(250, y_position, 200, 25);
         lblIP.setFont(new Font("Monospaced", Font.BOLD, 16));
         add(lblIP);
 
-        txtIP = new JTextField("192.168.0.10");
-        txtIP.setBounds(250, 245, 200, 30);
-        add(txtIP);
+        y_position += gapLblTxt;
+        txtServerIP = new JTextField("127.0.0.1");
+        txtServerIP.setBounds(250, y_position, 200, 30);
+        txtServerIP.setEditable(false);
+        txtServerIP.setFocusable(false);
+        add(txtServerIP);
 
+        y_position += gapBlock;
         JLabel lblPort = new JLabel("Port");
-        lblPort.setBounds(250, 290, 200, 25);
+        lblPort.setBounds(250, y_position, 200, 25);
         lblPort.setFont(new Font("Monospaced", Font.BOLD, 16));
         add(lblPort);
 
-        txtPort = new JTextField();
-        txtPort.setBounds(250, 315, 200, 30);
-        add(txtPort);
+        y_position += gapLblTxt;
+        txtServerPort = new JTextField();
+        txtServerPort.setBounds(250, y_position, 200, 30);
+        add(txtServerPort);
 
-        JButton btnBack = new JButton("< BACK");
+        JButton btnBack = new JButton("◄ BACK");
         btnBack.setBounds(30, 460, 130, 45);
         styleGameButton(btnBack);
         add(btnBack);
@@ -74,16 +83,16 @@ public class PnlConfig extends JPanel {
         g2.drawImage(background, 0, 0, getWidth(), getHeight(), this);
     }
 
-    public JTextField getTxtUsername() {
-		return txtUsername;
+    public JTextField getTxtServerUsername() {
+		return txtServerUsername;
 	}
 
-	public JTextField getTxtIP() {
-		return txtIP;
+	public JTextField getTxtServerIP() {
+		return txtServerIP;
 	}
 
-	public JTextField getTxtPort() {
-		return txtPort;
+	public JTextField getTxtServerPort() {
+		return txtServerPort;
 	}
 	
 	public JButton getBtnStart() {
