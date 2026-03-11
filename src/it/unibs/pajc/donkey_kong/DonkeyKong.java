@@ -1,4 +1,3 @@
-// All rights to Lorenzo M. Cella
 package it.unibs.pajc.donkey_kong;
 import java.net.UnknownHostException;
 

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -11,12 +12,16 @@ import java.beans.PropertyChangeListener;
 public class ViewSetup {
 
 	public JFrame frame;
-    private CardLayout cardLayout;
+    
+	private CardLayout cardLayout;
     private JPanel mainPanel;
+    
     private PnlServer pnlServer;
     private PnlClient pnlClient;
     private PnlHome pnlHome;
 	private ModelSetup model;
+	
+	private static final String IPV4_REGEX = "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$";
 	
 	/**
 	 * Create the application.
@@ -109,21 +114,46 @@ public class ViewSetup {
 
 	// Getters Client
     public String getClientUsername() {
-        return pnlClient.getTxtClientUsername().getText();
+    		String username = pnlClient.getTxtClientUsername().getText();
+
+		if(username.trim().length() == 0) {
+			JOptionPane.showMessageDialog(null, "You must insert an username", "Error", JOptionPane.ERROR_MESSAGE);
+			username = null;
+		}
+		
+        return username;
     }
 
     public String getClientIP() {
-        return pnlClient.getTxtClientIP().getText();
+    		String ipAddress = pnlClient.getTxtClientIP().getText();
+    		
+		if(ipAddress.trim().length() == 0) {
+			JOptionPane.showMessageDialog(null, "You must insert an ip", "Error", JOptionPane.ERROR_MESSAGE);
+			ipAddress = null;
+		}
+		
+		if(ipAddress != null && !isValidIPv4Regex(ipAddress)) {
+			JOptionPane.showMessageDialog(null, "You must insert a valid ip", "Error", JOptionPane.ERROR_MESSAGE);
+			ipAddress = null;
+		}
+		
+        return ipAddress;
     }
 
     public int getClientPort() {
         int port = 55555;
         
         try {
-            port = Integer.parseInt(pnlClient.getTxtClientPort().getText(), 10);
+        		port = Integer.parseInt(pnlClient.getTxtClientPort().getText(), 10);
         } 
         catch (NumberFormatException e) {
-            System.out.println("Errore lettura porta, usata 55555");
+        		JOptionPane.showMessageDialog(null, "You must insert a port number", "Error", JOptionPane.ERROR_MESSAGE);
+        		port = 0;
+        }
+        
+        if(port <= 49152 || port >= 65535) {
+        		JOptionPane.showMessageDialog(null, "You must insert a valid port number\n(49152 -> 65535)", "Error", JOptionPane.ERROR_MESSAGE);
+        		port = 0;
         }
         
         return port;
@@ -131,7 +161,14 @@ public class ViewSetup {
     
     // Getters Server
     String getServerUsername() {
-        return pnlServer.getTxtServerUsername().getText();
+    		String username = pnlServer.getTxtServerUsername().getText();
+
+    		if(username.trim().length() == 0) {
+    			JOptionPane.showMessageDialog(null, "You must insert an username", "Error", JOptionPane.ERROR_MESSAGE);
+    			username = null;
+    		}
+    			
+        return username;
     }
 
     int getServerPort() {
@@ -141,13 +178,23 @@ public class ViewSetup {
             port = Integer.parseInt(pnlServer.getTxtServerPort().getText(), 10);
         } 
         catch (NumberFormatException e) {
-            System.out.println("Errore lettura porta, usata 55555");
+        		JOptionPane.showMessageDialog(null, "You must insert a port number", "Error", JOptionPane.ERROR_MESSAGE);
+        		port = 0;
+        }
+        
+        if(port <= 49152 || port >= 65535) {
+        		JOptionPane.showMessageDialog(null, "You must insert a valid port number\n(49152 -> 65535)", "Error", JOptionPane.ERROR_MESSAGE);
+        		port = 0;
         }
         
         return port;
     }
-
+    
 	public void setVisible(boolean b) {
-		this.setVisible(b);
+		frame.setVisible(b);
+	}
+	
+	public static boolean isValidIPv4Regex(String ip) {
+	    return ip.matches(IPV4_REGEX);
 	}
 }

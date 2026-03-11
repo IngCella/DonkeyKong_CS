@@ -8,13 +8,18 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
-import it.unibs.pajc.setup.ControllerSetup;
+import it.unibs.pajc.setup.*;
+
+import it.unibs.pajc.networking.*;
 
 public class Controller {
 
     private final Model model;
     private final View view;
     private final ControllerSetup controllerSetup;
+    
+    // Networking
+    private Terminal terminal;
 
     String[] resume = {"Resume"};
     String[] quit = {"Quit"};
@@ -37,15 +42,57 @@ public class Controller {
             }
         });
 
-        timer.start();
+        // Ricevitore del messaggio
+        Receiver receiver = new Receiver() {
+        	
+        	// Il receiver crea l'implementazione del metodo accept che gli permette di leggere
+        	// il messaggio da parte del terminal che l'ha inviato
+            @Override
+            public void accept(Message message, Receiver from) {
+                //System.out.println("Ricevuto messaggio: " + message.toString()); // DEBUG
+            	
+            	// Controlla se il messaggio non è vuoto e ne invia il conenuto al model
+                if (message != null) {
+                    message.open(model, from);
+                }
+            }
+        };
         
-        // Listener di Listen (quindi Server)
+        // Listener di Host (quindi Server)
         controllerSetup.addBtnStartListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
             		// Fare un metodo che controlli che i dati inseriti siano validi e che, nel caso non vadano bene
             		// venga inserito nelle textfield una scritta rossa magari che avvisi l'errore che quando si vuole scrivere sparisce
-            		System.out.println("SONO IL CONTROLLER E TU SEI " + controllerSetup.getServerName());
+            		
+            		int port = controllerSetup.getServerPort();
+            		String username = controllerSetup.getServerName();
+            		
+            		if(port != 0 && username != null) {
+            			terminal = new Server("Server", port, receiver);
+                		
+                		controllerSetup.setVisible(false);
+                		view.setVisible(true);
+                		timer.start();
+            		}
+            }
+        });
+        
+        // Listener di Join (quindi Client)
+        controllerSetup.addBtnGoListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+            		String username = controllerSetup.getClientName();
+            		int port = controllerSetup.getClientPort();
+            		String ip = controllerSetup.getClientIP();
+            		
+            		if(username != null && port != 0 && ip != null) {
+            			terminal = new Client("Client", ip ,port, receiver);
+                		
+                		controllerSetup.setVisible(false);
+                		view.setVisible(true);
+                		timer.start();
+            		}
             }
         });
 
