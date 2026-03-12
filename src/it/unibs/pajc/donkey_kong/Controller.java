@@ -22,6 +22,7 @@ public class Controller {
     
     // Networking
     private Terminal terminal;
+    private boolean isServer = false;
 
     String[] resume = {"Resume"};
     String[] quit = {"Quit"};
@@ -41,7 +42,8 @@ public class Controller {
         	if(model.isStartGame()) {
         		if(!model.isTimerFinished()) {
         			model.update();
-        			//view.repaint();
+        			view.repaint();
+        			
         		} else {
         			((Timer) e.getSource()).stop(); // Ferma questo timer
         		}
@@ -52,11 +54,13 @@ public class Controller {
         timer = new Timer(16, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	terminal.accept(new ModelMessage(model), null);
-            	
-            	if(model.isStartGame() && model.isTimerFinished()) {
+            	if(isServer && model.isStartGame() && model.isTimerFinished()) {
             		model.update();
-                    //view.repaint();
+                    view.repaint();
+                    
+                    terminal.accept(new ModelMessage(model), null);
+            	} else if(!isServer) {
+            		terminal.accept(new ClientInputMessage(model.getPlayer1()), null);
             	}
             }
         });
@@ -82,30 +86,29 @@ public class Controller {
         controllerSetup.addBtnStartListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-            		// Fare un metodo che controlli che i dati inseriti siano validi e che, nel caso non vadano bene
-            		// venga inserito nelle textfield una scritta rossa magari che avvisi l'errore che quando si vuole scrivere sparisce
+        		int port = controllerSetup.getServerPort();
+        		String username = controllerSetup.getServerName();
+        		
+        		if(port != 0 && username != null) {
+        			terminal = new Server("Server", port, receiver);
+        			terminal.start();
+        			
+        			isServer = true;
+        			
+        			model.getPlayer1().setUsername(username);
+        			try {
+						view.setServerIpAddress(InetAddress.getLocalHost().getHostAddress());
+					} catch (UnknownHostException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+        			view.setServerPort(port);
+            		controllerSetup.setVisible(false);
+            		view.setVisible(true);
             		
-            		int port = controllerSetup.getServerPort();
-            		String username = controllerSetup.getServerName();
-            		
-            		if(port != 0 && username != null) {
-            			terminal = new Server("Server", port, receiver);
-            			terminal.start();
-            			
-            			model.getPlayer1().setUsername(username);
-            			try {
-							view.setServerIpAddress(InetAddress.getLocalHost().getHostAddress());
-						} catch (UnknownHostException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-            			view.setServerPort(port);
-                		controllerSetup.setVisible(false);
-                		view.setVisible(true);
-                		
-                		delayTimer.start();
-                		timer.start();
-            		}
+            		delayTimer.start();
+            		timer.start();
+        		}
             }
         });
         
@@ -121,9 +124,12 @@ public class Controller {
             			terminal = new Client("Client", ip ,port, receiver);
             	        terminal.start();
             	        
+            	        isServer = false;
+            	        model.setStartGame(true);
+            	        
                 		controllerSetup.setVisible(false);
                 		view.setVisible(true);
-                		
+
                 		delayTimer.start();
                 		timer.start();
             		}

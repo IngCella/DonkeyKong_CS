@@ -9,9 +9,9 @@ public class Collisions implements Serializable {
 
     private Model model;
 
-    private Player player;
+    private Player player1;
+    private Player player2;
     private Kong kong;
-    private ShowNumber lifes;
     private Floor floor;
     private Floor[] bars;
     private Ladder[] ladders;
@@ -20,9 +20,9 @@ public class Collisions implements Serializable {
     public Collisions(Model model) {
         this.model = model;
 
-        player = model.getPlayer1();
+        player1 = model.getPlayer1();
+		player2 = model.getPlayer2();
         kong = model.getKong();
-        lifes = model.getLifes1();
         floor = model.getFloor();
         bars = model.getBars();
         ladders = model.getLadders();
@@ -41,32 +41,84 @@ public class Collisions implements Serializable {
     }
 
     public void update() {
-        // COLLISIONI DEL PLAYER
-        // Se collide con il bordo di sinistra la sua posizione x diventa 0
-        if (player.collideLeft()) {
-            player.setX(0);
+        // COLLISIONI DEL PLAYER1 E PLAYER2
+    	if (player1.collideLeft()) {
+            player1.setX(0);
         }
         // Se collide con il bordo di destra la posizione x diventa la larghezza della finestra - la larghezza del player
-        if (player.collideRight()) {
-            player.setX(model.GameWidth - player.getWidth());
+        if (player1.collideRight()) {
+            player1.setX(model.GameWidth - player1.getWidth());
         }
         // Se non tocca nessun pavimento e non sta saltando, arrampicandosi applica la gravità
-        if (!isTouching(player) && !player.isJumping() && !player.isClimbing()) {
-            player.setY(player.getY() + player.getSpeedY());
+        if (!isTouching(player1) && !player1.isJumping() && !player1.isClimbing()) {
+            player1.setY(player1.getY() + player1.getSpeedY());
         }
         // Se collide con una scala sale o scende
         for (Ladder ladder : ladders) {
-            if (player.collides(ladder) && player.isClimbing()) {
-                if (player.getY() >= ladder.getY() - player.getHeight()) {
-                    player.setY(player.getY() - player.getSpeedY());
+            if (player1.collides(ladder) && player1.isClimbing()) {
+                if (player1.getY() >= ladder.getY() - player1.getHeight()) {
+                    player1.setY(player1.getY() - player1.getSpeedY());
                 }
-            } else if (player.collides(ladder) && player.isFalling()) {
-                if (player.getY() <= ladder.getY() + player.getHeight()) {
-                    player.setY(player.getY() + player.getSpeedY());
+            } else if (player1.collides(ladder) && player1.isFalling()) {
+                if (player1.getY() <= ladder.getY() + player1.getHeight()) {
+                    player1.setY(player1.getY() + player1.getSpeedY());
                 }
             }
         }
+        
+        for (int i = 0; i < barrels.size(); i++) {
+        	// Collisione con il player
+            if (player1.collides(barrels.get(i))) {
+                // Se collide perde una vita e il barile si distrugge
+                player1.setLifes(player1.getLifes() - 1);
+                barrels.get(i).setAlive(false);
 
+                // Se le vite sono finite muore
+                if (player1.getLifes() == 0) {
+                    player1.setAlive(false);
+                }
+            }
+        }
+    	
+        // Se collide con il bordo di sinistra la sua posizione x diventa 0
+        if (player2.collideLeft()) {
+            player2.setX(0);
+        }
+        // Se collide con il bordo di destra la posizione x diventa la larghezza della finestra - la larghezza del player
+        if (player2.collideRight()) {
+            player2.setX(model.GameWidth - player2.getWidth());
+        }
+        // Se non tocca nessun pavimento e non sta saltando, arrampicandosi applica la gravità
+        if (!isTouching(player2) && !player2.isJumping() && !player2.isClimbing()) {
+            player2.setY(player2.getY() + player2.getSpeedY());
+        }
+        // Se collide con una scala sale o scende
+        for (Ladder ladder : ladders) {
+            if (player2.collides(ladder) && player2.isClimbing()) {
+                if (player2.getY() >= ladder.getY() - player2.getHeight()) {
+                    player2.setY(player2.getY() - player2.getSpeedY());
+                }
+            } else if (player2.collides(ladder) && player2.isFalling()) {
+                if (player2.getY() <= ladder.getY() + player2.getHeight()) {
+                    player2.setY(player2.getY() + player2.getSpeedY());
+                }
+            }
+        }
+        
+        for (int i = 0; i < barrels.size(); i++) {
+        	// Collisione con il player
+            if (player2.collides(barrels.get(i))) {
+                // Se collide perde una vita e il barile si distrugge
+                player2.setLifes(player2.getLifes() - 1);
+                barrels.get(i).setAlive(false);
+
+                // Se le vite sono finite muore
+                if (player2.getLifes() == 0) {
+                    player2.setAlive(false);
+                }
+            }
+        }
+        
         // COLLISIONI DEI BARILI
         for (int i = 0; i < barrels.size(); i++) {
             // Se il barile ha superato kong e sta sopra alla prima barra rossa allora è visible
@@ -85,18 +137,6 @@ public class Collisions implements Serializable {
                 }
                 else if(barrels.get(i).getX() < kong.getX() + (kw*4)+5){
                     kong.throwed();
-                }
-            }
-            
-            // Collisione con il player
-            if (player.collides(barrels.get(i))) {
-                // Se collide perde una vita e il barile si distrugge
-                lifes.setNumber(lifes.getNumber() - 1);
-                barrels.get(i).setAlive(false);
-
-                // Se le vite sono finite muore
-                if (lifes.getNumber() == 0) {
-                    player.setAlive(false);
                 }
             }
 

@@ -36,9 +36,7 @@ public class Model extends Observable implements Serializable {
     private Barrel barrelStack;
     private ArrayList<Barrel> barrels;
 
-    // TODO: rivedere
-    private Collisions collisions1;
-    private Collisions collisions2;
+    private Collisions collisions;
 
     private int qta = 17;
 
@@ -48,6 +46,7 @@ public class Model extends Observable implements Serializable {
 
     public Model() {
         player1 = new Player(5, GameHeight - 65, 32, 32, 4, 2, "");
+        player2 = new Player(5, GameHeight - 65, 32, 32, 4, 2, "");
         kong = new Kong(GameWidth / 2 - 50, -1, 78, 78, 0, 0);
         peach = new Peach(kong.getX() + 110, 25, 32, 50, 0, 0);
         
@@ -87,7 +86,7 @@ public class Model extends Observable implements Serializable {
             x += 250;
         }
 
-        collisions1 = new Collisions(this);
+        collisions = new Collisions(this);
     }
 
     public boolean isStartGame() {
@@ -114,7 +113,11 @@ public class Model extends Observable implements Serializable {
         return player2;
     }
 
-    public Kong getKong() {
+    public void setPlayer2(Player player2) {
+		this.player2 = player2;
+	}
+
+	public Kong getKong() {
         return kong;
     }
 
@@ -162,12 +165,12 @@ public class Model extends Observable implements Serializable {
         return barrels;
     }
     
-    public Collisions getCollisions2() {
-		return collisions2;
+	public Collisions getCollisions() {
+		return collisions;
 	}
 
 	public void jump() {
-        if (collisions1.isTouching(player1)) {
+        if (collisions.isTouching(player1)) {
             player1.jump();
         }
     }
@@ -187,11 +190,12 @@ public class Model extends Observable implements Serializable {
     public void fall() {
         player1.fall();
     }
-
+    
     public void update() {
     	if(startGame) {
     		if(timerFinished) {
     			player1.update();
+    			player2.update();
 
                 for (Barrel barrel : barrels) {
                     barrel.update();
@@ -209,8 +213,7 @@ public class Model extends Observable implements Serializable {
                     barrels.add(new Barrel(kong.getX() - 100, 50, 20, 20, 3, 2));
                 }
 
-                collisions1.update();
-                //collisions2.update();
+                collisions.update();
                 
                 // Se il player1 muore il gioco finisce
                 if (!player1.isAlive()) {
@@ -244,31 +247,27 @@ public class Model extends Observable implements Serializable {
         notifyObservers();
     }
     
-    public void cgd() {
-    	setChanged();
-        notifyObservers();
-    }
-    
     public void sync(Model model2) {
-    	/** /
-    	// startGame = true;
-    	// model2.setStartGame(true);
-    	
-    	player2 = model2.getPlayer2();
-    	lifes2 = model2.getLifes2();
-    	collisions2 = model2.getCollisions2();
-    	/**/
     	
 	    // Sincronizza lo stato dei timer
 	    this.timerNumber.setNumber(model2.getTimerNumber().getNumber());
 	    this.timerFinished = model2.isTimerFinished();
 	    
 	    // Sincronizza gli altri giocatori/entità
-	    this.player2 = model2.getPlayer2();
-	    this.lifes2 = model2.getLifes2();
-	    this.collisions2 = model2.getCollisions2();
+	    this.player2 = model2.getPlayer1();
+	    this.lifes2 = model2.getLifes1();
 	    
-	    // Se necessario, sincronizza anche player1 se il server deve 
-	    // avere l'ultima parola sulla posizione
+	    this.kong = model2.getKong();
+	    this.barrels = model2.getBarrels();
+	    
+	    // SIAMO ARRIVATI QUA
+	    this.collisions.update();
+	    this.player1.update();
+	    this.player2.update();
+	    
+	    // System.out.println("x: " + this.player1.getX() + this.player1.collides(floor));
+	    
+	    setChanged();
+        notifyObservers();
     }
 }

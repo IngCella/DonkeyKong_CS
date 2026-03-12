@@ -97,18 +97,20 @@ public class View extends JFrame implements Observer {
         g2.setColor(Color.BLACK);
         g2.fillRect(0, 0, this.getWidth(), this.getHeight());
         
-        Player p = model.getPlayer1();
+        Player p1 = model.getPlayer1();
+        Player p2 = model.getPlayer2();
         
         if(model.isStartGame()) {
         	if(model.isTimerFinished()) {
                 Heart h = model.getHeart();
                 ShowNumber lf = model.getLifes1();
                 
-                if (lf.getNumber() != 0) {
+                // TODO: anche per P2
+                if (p1.getLifes() != 0) {
                     g2.drawImage(heart, h.getX(), h.getY(), h.getWidth(), h.getHeight(), null);
                 }
                 
-                switch (lf.getNumber()) {
+                switch (p1.getLifes()) {
                     case 3:
                         g2.drawImage(three, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
                         break;
@@ -134,20 +136,30 @@ public class View extends JFrame implements Observer {
                     g2.drawImage(ladder, ld.getX(), ld.getY(), ld.getWidth(), ld.getHeight(), null);
                 }
 
-                // Draw del player
+                // TODO: Draw degli username
                 Font font = new Font("Monospaced", Font.BOLD, 20);
                 g2.setFont(font);
                 g2.setColor(Color.WHITE);
-                String username = p.getUsername();
+                String username = p1.getUsername();
                 g2.drawString(username, 8, 28);
             	g2.setColor(Color.BLACK);
             	
-                if (p.isMovingDx()) {
-                    g2.drawImage(marioRight, p.getX(), p.getY(), p.getWidth(), p.getHeight(), null);
-                } else if (p.isMovingSx()) {
-                    g2.drawImage(marioLeft, p.getX(), p.getY(), p.getWidth(), p.getHeight(), null);
-                } else if (p.isClimbing() || p.isFalling()) {
-                    g2.drawImage(marioClimb, p.getX(), p.getY(), p.getWidth(), p.getHeight(), null);
+            	// Draw del P1
+                if (p1.isMovingDx()) {
+                    g2.drawImage(marioRight, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
+                } else if (p1.isMovingSx()) {
+                    g2.drawImage(marioLeft, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
+                } else if (p1.isClimbing() || p1.isFalling()) {
+                    g2.drawImage(marioClimb, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
+                }
+                
+                // Draw del P2
+                if (p2.isMovingDx()) {
+                    g2.drawImage(marioRight, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
+                } else if (p2.isMovingSx()) {
+                    g2.drawImage(marioLeft, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
+                } else if (p2.isClimbing() || p2.isFalling()) {
+                    g2.drawImage(marioClimb, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
                 }
 
                 // Draw delle barre
@@ -206,7 +218,7 @@ public class View extends JFrame implements Observer {
             g2.setFont(font);
             g2.setColor(Color.ORANGE);
             
-            String username = p.getUsername().toUpperCase();
+            String username = p1.getUsername().toUpperCase();
             String ipAddressPort = (serverIpAddress + ":" + serverPort);
             String shareTxt = "Share your ip with the other player!";
             
