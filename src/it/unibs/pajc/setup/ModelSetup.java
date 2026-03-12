@@ -12,17 +12,17 @@ public class ModelSetup {
     private transient final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
     // Client
-    private String clientUsername = "";
+    private String clientUsername = "Bazo";
     public static final String PROP_CLIENTUSERNAME = "clientUsername";
     
-    private String clientIP = "";
+    private String clientIP = "127.0.0.1";
     public static final String PROP_CLIENTIP = "clientIP";
     
     private int clientPort = 55555;
     public static final String PROP_CLIENTPORT = "clientPort";
     
     // Server
-    private String serverUsername = "";
+    private String serverUsername = "Celli";
     public static final String PROP_SERVERUSERNAME = "serverUsername";
     
     private String serverIP = "127.0.0.1";
@@ -107,10 +107,12 @@ public class ModelSetup {
     }
     
     public ModelSetup() {
-    		try {
+    	/** /
+    	try {
             this.serverIP = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException ex) {
             Logger.getLogger(ModelSetup.class.getName()).log(Level.SEVERE, null, ex);
         }
+    	/**/
     }
 }

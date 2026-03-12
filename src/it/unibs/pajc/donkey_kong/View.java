@@ -2,19 +2,28 @@ package it.unibs.pajc.donkey_kong;
 
 import it.unibs.pajc.donkey_kong.entities.*;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.RenderingHints;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class View extends JFrame implements Observer {
 
     private final Model model;
-
+    
+    private String serverIpAddress;
+    private int serverPort;
+    
     private Image icon;
     private Image heart;
     private Image brokenHeart;
@@ -82,92 +91,166 @@ public class View extends JFrame implements Observer {
 
     public void paintStage(Graphics g) {
         // Draw dello sfondo
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, this.getWidth(), this.getHeight());
+    	Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    	
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, this.getWidth(), this.getHeight());
+        
+        Player p = model.getPlayer1();
+        
+        if(model.isStartGame()) {
+        	if(model.isTimerFinished()) {
+                Heart h = model.getHeart();
+                ShowNumber lf = model.getLifes1();
+                
+                if (lf.getNumber() != 0) {
+                    g2.drawImage(heart, h.getX(), h.getY(), h.getWidth(), h.getHeight(), null);
+                }
+                
+                switch (lf.getNumber()) {
+                    case 3:
+                        g2.drawImage(three, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
+                        break;
+                    case 2:
+                        g2.drawImage(two, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
+                        break;
+                    case 1:
+                        g2.drawImage(one, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
+                        break;
+                    default:
+                        g2.drawImage(zero, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
+                        g2.drawImage(brokenHeart, h.getX() - 4, h.getY() - 3, h.getWidth() + 9, h.getHeight() + 9, null);
+                        break;
+                }
+                
+                // Draw del pavimento
+                Floor f = model.getFloor();
+                g2.drawImage(floor, f.getX(), f.getY(), f.getWidth(), f.getHeight(), null);
+                
+        		// Draw delle scale
+                Ladder[] l = model.getLadders();
+                for (Ladder ld : l) {
+                    g2.drawImage(ladder, ld.getX(), ld.getY(), ld.getWidth(), ld.getHeight(), null);
+                }
 
-        // Draw del cuore, delle vite e di pause
-        Heart h = model.getHeart();
-        Lifes lf = model.getLifes();
+                // Draw del player
+                Font font = new Font("Monospaced", Font.BOLD, 20);
+                g2.setFont(font);
+                g2.setColor(Color.WHITE);
+                String username = p.getUsername();
+                g2.drawString(username, 8, 28);
+            	g2.setColor(Color.BLACK);
+            	
+                if (p.isMovingDx()) {
+                    g2.drawImage(marioRight, p.getX(), p.getY(), p.getWidth(), p.getHeight(), null);
+                } else if (p.isMovingSx()) {
+                    g2.drawImage(marioLeft, p.getX(), p.getY(), p.getWidth(), p.getHeight(), null);
+                } else if (p.isClimbing() || p.isFalling()) {
+                    g2.drawImage(marioClimb, p.getX(), p.getY(), p.getWidth(), p.getHeight(), null);
+                }
 
-        if (lf.getLifes() != 0) {
-            g.drawImage(heart, h.getX(), h.getY(), h.getWidth(), h.getHeight(), null);
+                // Draw delle barre
+                Floor[] b = model.getBars();
+                for (Floor br : b) {
+                    g2.drawImage(bar, br.getX(), br.getY(), br.getWidth(), br.getHeight(), null);
+                }
+
+                // Draw di Kong
+                Kong k = model.getKong();
+                if (k.isGetting()) {
+                    g2.drawImage(kongGet, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
+                } else if (k.isFull()) {
+                    g2.drawImage(kongFull, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
+                } else if (k.isThrowing()) {
+                    g2.drawImage(kongThrow, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
+                }
+
+                // Draw di Peach
+                Peach pe = model.getPeach();
+                g2.drawImage(peach, pe.getX(), pe.getY(), pe.getWidth(), pe.getHeight(), null);
+
+                // Draw dello stack di barili
+                Barrel bs = model.getBarrelStack();
+                g2.drawImage(barrelStack, bs.getX(), bs.getY(), bs.getWidth(), bs.getHeight(), null);
+
+                // Draw dei barili
+                ArrayList<Barrel> br = model.getBarrels();
+                for (Barrel bl : br) {
+                    if (bl.isVisible()) {
+                        g2.drawImage(barrel, bl.getX(), bl.getY(), bl.getWidth(), bl.getHeight(), null);
+                    }
+                }
+        	} else {
+        		// Timer
+        		ShowNumber t = model.getTimerNumber();
+        		switch (t.getNumber()) {
+	                case 3:
+	                	g2.drawImage(three, t.getX(), t.getY(), t.getWidth(), t.getHeight(), null);
+	                    break;
+	                case 2:
+	                	g2.drawImage(two, t.getX(), t.getY(), t.getWidth(), t.getHeight(), null);
+	                    break;
+	                case 1:
+	                	g2.drawImage(one, t.getX(), t.getY(), t.getWidth(), t.getHeight(), null);
+	                    break;
+	                default:
+	                	g2.drawImage(zero, t.getX(), t.getY(), t.getWidth(), t.getHeight(), null);
+	                    break;
+        		}
+        	}
+        	
+        } else {
+        	// Il client non si è ancora  connesso
+            Font font = new Font("Monospaced", Font.BOLD, 60);
+            g2.setFont(font);
+            g2.setColor(Color.ORANGE);
+            
+            String username = p.getUsername().toUpperCase();
+            String ipAddressPort = (serverIpAddress + ":" + serverPort);
+            String shareTxt = "Share your ip with the other player!";
+            
+            FontMetrics metrics = g2.getFontMetrics(g2.getFont());
+            Point usernamePosition = calculateTextPosition(username, metrics);
+            Point ipAddressPortPosition = calculateTextPosition(ipAddressPort, metrics);
+            
+            g2.drawString(username, usernamePosition.x, usernamePosition.y-40);
+            g2.drawString(ipAddressPort, ipAddressPortPosition.x, ipAddressPortPosition.y+20);
+            
+            font = new Font("Monospaced", Font.BOLD, 30);
+            g2.setFont(font);
+            metrics = g2.getFontMetrics(g2.getFont());
+            Point shareTxtPosition = calculateTextPosition(shareTxt, metrics);
+            
+            g2.drawString(shareTxt, shareTxtPosition.x, shareTxtPosition.y+70);
         }
-        switch (lf.getLifes()) {
-            case 3:
-                g.drawImage(three, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
-                break;
-            case 2:
-                g.drawImage(two, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
-                break;
-            case 1:
-                g.drawImage(one, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
-                break;
-            default:
-                g.drawImage(zero, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
-                g.drawImage(brokenHeart, h.getX() - 4, h.getY() - 3, h.getWidth() + 9, h.getHeight() + 9, null);
-                break;
-        }
-
-        // Draw del pavimento
-        Floor f = model.getFloor();
-        g.drawImage(floor, f.getX(), f.getY(), f.getWidth(), f.getHeight(), null);
-
-        // Draw delle scale
-        Ladder[] l = model.getLadders();
-        for (Ladder ld : l) {
-            g.drawImage(ladder, ld.getX(), ld.getY(), ld.getWidth(), ld.getHeight(), null);
-        }
-
-        // Draw del player
-        Player p = model.getPlayer();
-        if (p.isMovingDx()) {
-            g.drawImage(marioRight, p.getX(), p.getY(), p.getWidth(), p.getHeight(), null);
-        } else if (p.isMovingSx()) {
-            g.drawImage(marioLeft, p.getX(), p.getY(), p.getWidth(), p.getHeight(), null);
-        } else if (p.isClimbing() || p.isFalling()) {
-            g.drawImage(marioClimb, p.getX(), p.getY(), p.getWidth(), p.getHeight(), null);
-        }
-
-        // Draw delle barre
-        Floor[] b = model.getBars();
-        for (Floor br : b) {
-            g.drawImage(bar, br.getX(), br.getY(), br.getWidth(), br.getHeight(), null);
-        }
-
-        // Draw di Kong
-        Kong k = model.getKong();
-        if (k.isGetting()) {
-            g.drawImage(kongGet, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
-        } else if (k.isFull()) {
-            g.drawImage(kongFull, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
-        } else if (k.isThrowing()) {
-            g.drawImage(kongThrow, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
-        }
-
-        // Draw di Peach
-        Peach pe = model.getPeach();
-        g.drawImage(peach, pe.getX(), pe.getY(), pe.getWidth(), pe.getHeight(), null);
-
-        // Draw dello stack di barili
-        Barrel bs = model.getBarrelStack();
-        g.drawImage(barrelStack, bs.getX(), bs.getY(), bs.getWidth(), bs.getHeight(), null);
-
-        // Draw dei barili
-        ArrayList<Barrel> br = model.getBarrels();
-        for (Barrel bl : br) {
-            if (bl.isVisible()) {
-                g.drawImage(barrel, bl.getX(), bl.getY(), bl.getWidth(), bl.getHeight(), null);
-            }
-        }
+        
     }
+    
+	public void setServerIpAddress(String serverIpAddress) {
+		this.serverIpAddress = serverIpAddress;
+	}
 
-    @Override
+	public void setServerPort(int serverPort) {
+		this.serverPort = serverPort;
+	}
+	
+	public Point calculateTextPosition(String string, FontMetrics metrics) {
+		// Calcola la coordinata X per centrare
+        int x = (getWidth() - metrics.stringWidth(string)) / 2;
+        
+        // Calcola la coordinata Y per centrare verticalmente
+        int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
+        
+        return new Point(x, y);
+	}
+
+	@Override
     public void update(Observable o, Object arg) {
         repaint();
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         stagePanel = new javax.swing.JPanel(){
@@ -204,7 +287,7 @@ public class View extends JFrame implements Observer {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(stagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-
+        
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents

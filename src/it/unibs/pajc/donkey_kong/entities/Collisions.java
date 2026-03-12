@@ -1,15 +1,17 @@
 package it.unibs.pajc.donkey_kong.entities;
 
 import it.unibs.pajc.donkey_kong.Model;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Collisions {
+public class Collisions implements Serializable {
 
     private Model model;
 
     private Player player;
     private Kong kong;
-    private Lifes lifes;
+    private ShowNumber lifes;
     private Floor floor;
     private Floor[] bars;
     private Ladder[] ladders;
@@ -18,9 +20,9 @@ public class Collisions {
     public Collisions(Model model) {
         this.model = model;
 
-        player = model.getPlayer();
+        player = model.getPlayer1();
         kong = model.getKong();
-        lifes = model.getLifes();
+        lifes = model.getLifes1();
         floor = model.getFloor();
         bars = model.getBars();
         ladders = model.getLadders();
@@ -89,11 +91,11 @@ public class Collisions {
             // Collisione con il player
             if (player.collides(barrels.get(i))) {
                 // Se collide perde una vita e il barile si distrugge
-                lifes.setLifes(lifes.getLifes() - 0);
+                lifes.setNumber(lifes.getNumber() - 1);
                 barrels.get(i).setAlive(false);
 
                 // Se le vite sono finite muore
-                if (lifes.getLifes() == 0) {
+                if (lifes.getNumber() == 0) {
                     player.setAlive(false);
                 }
             }

@@ -2,6 +2,7 @@ package it.unibs.pajc.donkey_kong.entities;
 
 public class Player extends Default {
 
+	private String username;
     private int start_y;
     private boolean jumping = false;
     private boolean movingDx = true;
@@ -9,8 +10,9 @@ public class Player extends Default {
     private boolean climbing = false;
     private boolean falling = false;
 
-    public Player(int x, int y, int width, int height, int speedX, int speedY) {
+    public Player(int x, int y, int width, int height, int speedX, int speedY, String username) {
         super(x, y, width, height, speedX, speedY);
+        this.username = username;
     }
 
     public boolean isJumping() {
@@ -39,6 +41,14 @@ public class Player extends Default {
 
     public void setFalling(boolean falling) {
         this.falling = falling;
+    }
+    
+    public String getUsername() {
+        return username;
+    }
+    
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void jump() {

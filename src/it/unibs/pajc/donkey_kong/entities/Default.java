@@ -1,6 +1,8 @@
 package it.unibs.pajc.donkey_kong.entities;
 
-public class Default {
+import java.io.Serializable;
+
+public class Default implements Serializable {
 
     private final int GameWidth = 750;  // Larghezza Finestra
     private final int GameHeight = 600; // Altezza Finestra

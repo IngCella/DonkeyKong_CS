@@ -4,12 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import it.unibs.pajc.setup.*;
-
 import it.unibs.pajc.networking.*;
 
 public class Controller {
@@ -26,19 +28,36 @@ public class Controller {
     private ImageIcon pause = new ImageIcon(getClass().getResource("../assets/pause.png"));
     private ImageIcon gameover = new ImageIcon(getClass().getResource("../assets/gameOver.png"));
 
+    private Timer delayTimer;
     private Timer timer;
 
     public Controller(Model model, View view, ControllerSetup controllerSetup) {
         this.model = model;
         this.view = view;
         this.controllerSetup = controllerSetup;
+        
+        // Creiamo un timer che scatta una sola volta dopo 1000ms
+        delayTimer = new Timer(1000, e -> {
+        	if(model.isStartGame()) {
+        		if(!model.isTimerFinished()) {
+        			model.update();
+        			//view.repaint();
+        		} else {
+        			((Timer) e.getSource()).stop(); // Ferma questo timer
+        		}
+        	}
+        });
 
         // Timer che ripete l'update (delay = 16 = 62fps)
         timer = new Timer(16, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.update();
-                view.repaint();
+            	terminal.accept(new ModelMessage(model), null);
+            	
+            	if(model.isStartGame() && model.isTimerFinished()) {
+            		model.update();
+                    //view.repaint();
+            	}
             }
         });
 
@@ -54,6 +73,7 @@ public class Controller {
             	// Controlla se il messaggio non è vuoto e ne invia il conenuto al model
                 if (message != null) {
                     message.open(model, from);
+                    model.setStartGame(true);
                 }
             }
         };
@@ -70,9 +90,20 @@ public class Controller {
             		
             		if(port != 0 && username != null) {
             			terminal = new Server("Server", port, receiver);
-                		
+            			terminal.start();
+            			
+            			model.getPlayer1().setUsername(username);
+            			try {
+							view.setServerIpAddress(InetAddress.getLocalHost().getHostAddress());
+						} catch (UnknownHostException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+            			view.setServerPort(port);
                 		controllerSetup.setVisible(false);
                 		view.setVisible(true);
+                		
+                		delayTimer.start();
                 		timer.start();
             		}
             }
@@ -88,9 +119,12 @@ public class Controller {
             		
             		if(username != null && port != 0 && ip != null) {
             			terminal = new Client("Client", ip ,port, receiver);
-                		
+            	        terminal.start();
+            	        
                 		controllerSetup.setVisible(false);
                 		view.setVisible(true);
+                		
+                		delayTimer.start();
                 		timer.start();
             		}
             }
@@ -168,5 +202,6 @@ public class Controller {
                 }
             }
         });
+        
     }
 }

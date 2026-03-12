@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 public class ControllerSetup {
     private final ModelSetup modelSetup;
     private final ViewSetup viewSetup;
-
+    
     public ControllerSetup(ModelSetup model, ViewSetup view) {
         this.modelSetup = model;
         this.viewSetup = view;
