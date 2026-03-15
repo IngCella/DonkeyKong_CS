@@ -41,6 +41,10 @@ public class ControllerSetup {
         return viewSetup.getServerUsername();
     }
     
+    public String getServerIP(){
+        return viewSetup.getServerIP();
+    }
+    
     public int getServerPort(){
         return viewSetup.getServerPort();
     }

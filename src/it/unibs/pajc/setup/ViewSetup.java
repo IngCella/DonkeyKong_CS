@@ -170,6 +170,10 @@ public class ViewSetup {
     			
         return username;
     }
+    
+    public String getServerIP() {
+		return pnlServer.getTxtServerIP().getText();
+    }
 
     int getServerPort() {
         int port = 55555;

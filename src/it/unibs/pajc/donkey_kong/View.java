@@ -34,6 +34,9 @@ public class View extends JFrame implements Observer {
     private Image marioRight;
     private Image marioLeft;
     private Image marioClimb;
+    private Image luigiRight;
+    private Image luigiLeft;
+    private Image luigiClimb;
     private Image kongGet;
     private Image kongFull;
     private Image kongThrow;
@@ -63,9 +66,14 @@ public class View extends JFrame implements Observer {
             three = ImageIO.read(getClass().getResource("../assets/3.png"));
 
             // Player - Mario
-            marioRight = ImageIO.read(getClass().getResource("../assets/marioRight.png"));
-            marioLeft = ImageIO.read(getClass().getResource("../assets/marioLeft.png"));
-            marioClimb = ImageIO.read(getClass().getResource("../assets/marioClimb.png"));
+            marioRight = ImageIO.read(getClass().getResource("../assets/luigiRight.png"));
+            marioLeft = ImageIO.read(getClass().getResource("../assets/luigiLeft.png"));
+            marioClimb = ImageIO.read(getClass().getResource("../assets/luigiClimb.png"));
+            
+            // Player - Luigi
+            luigiRight = ImageIO.read(getClass().getResource("../assets/luigiRight.png"));
+            luigiLeft = ImageIO.read(getClass().getResource("../assets/luigiLeft.png"));
+            luigiClimb = ImageIO.read(getClass().getResource("../assets/luigiClimb.png"));
 
             // Kong
             kongGet = ImageIO.read(getClass().getResource("../assets/donkeyGet.png"));
@@ -102,28 +110,50 @@ public class View extends JFrame implements Observer {
         
         if(model.isStartGame()) {
         	if(model.isTimerFinished()) {
-                Heart h = model.getHeart();
-                ShowNumber lf = model.getLifes1();
+                Heart h1 = model.getHeart1();
+                Heart h2 = model.getHeart2();
+                ShowNumber lf1 = model.getLifes1();
+                ShowNumber lf2 = model.getLifes2();
                 
-                // TODO: anche per P2
+                // Lifes e Heart dei players
                 if (p1.getLifes() != 0) {
-                    g2.drawImage(heart, h.getX(), h.getY(), h.getWidth(), h.getHeight(), null);
+                    g2.drawImage(heart, h1.getX(), h1.getY(), h1.getWidth(), h1.getHeight(), null);
                 }
                 
                 switch (p1.getLifes()) {
                     case 3:
-                        g2.drawImage(three, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
+                        g2.drawImage(three, lf1.getX(), lf1.getY(), lf1.getWidth(), lf1.getHeight(), null);
                         break;
                     case 2:
-                        g2.drawImage(two, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
+                        g2.drawImage(two, lf1.getX(), lf1.getY(), lf1.getWidth(), lf1.getHeight(), null);
                         break;
                     case 1:
-                        g2.drawImage(one, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
+                        g2.drawImage(one, lf1.getX(), lf1.getY(), lf1.getWidth(), lf1.getHeight(), null);
                         break;
                     default:
-                        g2.drawImage(zero, lf.getX(), lf.getY(), lf.getWidth(), lf.getHeight(), null);
-                        g2.drawImage(brokenHeart, h.getX() - 4, h.getY() - 3, h.getWidth() + 9, h.getHeight() + 9, null);
+                        g2.drawImage(zero, lf1.getX(), lf1.getY(), lf1.getWidth(), lf1.getHeight(), null);
+                        g2.drawImage(brokenHeart, h1.getX() - 4, h1.getY() - 3, h1.getWidth() + 9, h1.getHeight() + 9, null);
                         break;
+                }
+                
+                if(p2.getLifes() != 0) {
+                	g2.drawImage(heart, h2.getX(), h2.getY(), h2.getWidth(), h2.getHeight(), null);
+                }
+                
+                switch (p2.getLifes()) {
+	                case 3:
+	                    g2.drawImage(three, lf2.getX(), lf2.getY(), lf2.getWidth(), lf2.getHeight(), null);
+	                    break;
+	                case 2:
+	                    g2.drawImage(two, lf2.getX(), lf2.getY(), lf2.getWidth(), lf2.getHeight(), null);
+	                    break;
+	                case 1:
+	                    g2.drawImage(one, lf2.getX(), lf2.getY(), lf2.getWidth(), lf2.getHeight(), null);
+	                    break;
+	                default:
+	                    g2.drawImage(zero, lf2.getX(), lf2.getY(), lf2.getWidth(), lf2.getHeight(), null);
+	                    g2.drawImage(brokenHeart, h2.getX() - 4, h2.getY() - 3, h2.getWidth() + 9, h2.getHeight() + 9, null);
+	                    break;
                 }
                 
                 // Draw del pavimento
@@ -140,8 +170,21 @@ public class View extends JFrame implements Observer {
                 Font font = new Font("Monospaced", Font.BOLD, 20);
                 g2.setFont(font);
                 g2.setColor(Color.WHITE);
-                String username = p1.getUsername();
-                g2.drawString(username, 8, 28);
+                String username1 = p1.getUsername();
+                String username2 = p2.getUsername();
+                
+                g2.drawString(username1, 8, 28);
+                
+                // Calcoliamo quanto è lungo il nome per attaccarlo al bordo destro
+                FontMetrics fm = g2.getFontMetrics();
+                int username2Width = fm.stringWidth(username2);
+                
+                // Definiamo un margine dal bordo destro (es. 20 pixel come fai a sinistra)
+                int marginRight = 20;
+                int rightEdge = getWidth()-marginRight;
+                
+                g2.drawString(username2, rightEdge-username2Width, 28);
+                
             	g2.setColor(Color.BLACK);
             	
             	// Draw del P1

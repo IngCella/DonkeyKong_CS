@@ -88,6 +88,7 @@ public class Controller {
             public void actionPerformed(ActionEvent ae) {
         		int port = controllerSetup.getServerPort();
         		String username = controllerSetup.getServerName();
+        		String ip = controllerSetup.getServerIP();
         		
         		if(port != 0 && username != null) {
         			terminal = new Server("Server", port, receiver);
@@ -96,12 +97,8 @@ public class Controller {
         			isServer = true;
         			
         			model.getPlayer1().setUsername(username);
-        			try {
-						view.setServerIpAddress(InetAddress.getLocalHost().getHostAddress());
-					} catch (UnknownHostException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+        			
+        			view.setServerIpAddress(ip);
         			view.setServerPort(port);
             		controllerSetup.setVisible(false);
             		view.setVisible(true);
@@ -123,8 +120,10 @@ public class Controller {
             		if(username != null && port != 0 && ip != null) {
             			terminal = new Client("Client", ip ,port, receiver);
             	        terminal.start();
-            	        
+
             	        isServer = false;
+            	        
+            	        model.getPlayer1().setUsername(username);
             	        model.setStartGame(true);
             	        
                 		controllerSetup.setVisible(false);

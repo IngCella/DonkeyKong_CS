@@ -24,7 +24,8 @@ public class Model extends Observable implements Serializable {
     
     private Kong kong;
     private Peach peach;
-    private Heart heart;
+    private Heart heart1;
+    private Heart heart2;
     
     private ShowNumber lifes1;
     private ShowNumber lifes2;
@@ -47,11 +48,16 @@ public class Model extends Observable implements Serializable {
     public Model() {
         player1 = new Player(5, GameHeight - 65, 32, 32, 4, 2, "");
         player2 = new Player(5, GameHeight - 65, 32, 32, 4, 2, "");
+        
         kong = new Kong(GameWidth / 2 - 50, -1, 78, 78, 0, 0);
         peach = new Peach(kong.getX() + 110, 25, 32, 50, 0, 0);
         
-        heart = new Heart(10, 30, 26, 26, 0, 0);
+        heart1 = new Heart(10, 30, 26, 26, 0, 0);
+        heart2 = new Heart(GameWidth-60, 30, 26, 26, 0, 0);
+        
         lifes1 = new ShowNumber(40, 33, 18, 20, 0, 0, 3);
+        lifes2 = new ShowNumber(GameWidth-30, 33, 18, 20, 0, 0, 3);
+        
         timerNumber = new ShowNumber((GameWidth/2)-50, (GameHeight/2)-50, 100, 100, 0, 0, 3);
 
         floor = new Floor(0, GameHeight - 25, GameWidth, 500, 0, 0);
@@ -125,8 +131,12 @@ public class Model extends Observable implements Serializable {
         return peach;
     }
 
-    public Heart getHeart() {
-        return heart;
+    public Heart getHeart1() {
+        return heart1;
+    }
+    
+    public Heart getHeart2() {
+    	return heart2;
     }
 
     public ShowNumber getLifes1() {
@@ -255,15 +265,20 @@ public class Model extends Observable implements Serializable {
 	    
 	    // Sincronizza gli altri giocatori/entità
 	    this.player2 = model2.getPlayer1();
-	    this.lifes2 = model2.getLifes1();
+	    
+	    this.lifes1 = model2.getLifes1();
+	    this.lifes2 = model2.getLifes2();
+	    
+	    this.heart1 = model2.getHeart1();
+	    this.heart2 = model2.getHeart2();
 	    
 	    this.kong = model2.getKong();
 	    this.barrels = model2.getBarrels();
 	    
 	    // SIAMO ARRIVATI QUA
-	    this.collisions.update();
 	    this.player1.update();
 	    this.player2.update();
+	    this.collisions.update();
 	    
 	    // System.out.println("x: " + this.player1.getX() + this.player1.collides(floor));
 	    
