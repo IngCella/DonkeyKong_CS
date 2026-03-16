@@ -81,7 +81,7 @@ public class View extends JFrame implements Observer {
             // Player - Luigi
             luigiRight = ImageIO.read(getClass().getResource("../assets/luigiRight.png"));
             luigiLeft = ImageIO.read(getClass().getResource("../assets/luigiLeft.png"));
-            luigiClimb = ImageIO.read(getClass().getResource("../assets/luigiClimb.png"));
+            luigiClimb = ImageIO.read(getClass().getResource("../assets/luigiClimbTest.png"));
 
             // Kong
             kongGet = ImageIO.read(getClass().getResource("../assets/donkeyGet.png"));
