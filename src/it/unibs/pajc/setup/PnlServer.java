@@ -42,8 +42,8 @@ public class PnlServer extends JPanel {
         y_position += gapLblTxt;
         txtServerIP = new JTextField("127.0.0.1");
         txtServerIP.setBounds(250, y_position, 200, 30);
-        // txtServerIP.setEditable(false);
-        // txtServerIP.setFocusable(false);
+        txtServerIP.setEditable(false);
+        txtServerIP.setFocusable(false);
         add(txtServerIP);
 
         y_position += gapBlock;

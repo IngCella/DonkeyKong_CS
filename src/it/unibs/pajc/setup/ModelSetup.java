@@ -107,12 +107,12 @@ public class ModelSetup {
     }
     
     public ModelSetup() {
-    	/** /
+    	
     	try {
             this.serverIP = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException ex) {
             Logger.getLogger(ModelSetup.class.getName()).log(Level.SEVERE, null, ex);
         }
-    	/**/
+    	
     }
 }
