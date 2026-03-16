@@ -234,10 +234,24 @@ public class Model extends Observable implements Serializable {
                     System.exit(0);
                 }
                 
+                if (!player2.isAlive()) {
+                    // Game Over
+                    setChanged();
+                    notifyObservers();
+                    JOptionPane.showOptionDialog(null, "", "You Win!", 0, 0, victory, quit, 0);
+                    System.exit(0);
+                }
+                
                 // Se il player1 raggiunge peach vince
                 if (player1.collides(peach)) {
                     // Win
                     JOptionPane.showOptionDialog(null, "", "You Win!", 0, 0, victory, quit, 0);
+                    System.exit(0);
+                }
+                
+                if (player2.collides(peach)) {
+                    // Win
+                	JOptionPane.showOptionDialog(null, "", "Game Over :(", 0, 0, gameover, quit, 0);
                     System.exit(0);
                 }
                 
