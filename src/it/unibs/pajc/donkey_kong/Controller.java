@@ -56,9 +56,9 @@ public class Controller {
             public void actionPerformed(ActionEvent e) {
             	if(isServer && model.isStartGame() && model.isTimerFinished()) {
             		model.update();
-                    view.repaint();
-                    
-                    terminal.accept(new ModelMessage(model), null);
+                view.repaint();
+                
+                terminal.accept(new ModelMessage(model), null);
             	} else if(!isServer) {
             		terminal.accept(new ClientInputMessage(model.getPlayer1()), null);
             	}

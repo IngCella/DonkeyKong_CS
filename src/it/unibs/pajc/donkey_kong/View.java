@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 public class View extends JFrame implements Observer {
 
@@ -23,6 +25,8 @@ public class View extends JFrame implements Observer {
     
     private String serverIpAddress;
     private int serverPort;
+    
+    private boolean popupShown = false;
     
     private Image icon;
     private Image heart;
@@ -46,6 +50,10 @@ public class View extends JFrame implements Observer {
     private Image ladder;
     private Image barrelStack;
     private Image barrel;
+    private ImageIcon gameover;
+    private ImageIcon victory;
+    
+    private String[] quit = {"Quit"};
 
     public View(Model model) {
         initComponents();
@@ -66,9 +74,9 @@ public class View extends JFrame implements Observer {
             three = ImageIO.read(getClass().getResource("../assets/3.png"));
 
             // Player - Mario
-            marioRight = ImageIO.read(getClass().getResource("../assets/luigiRight.png"));
-            marioLeft = ImageIO.read(getClass().getResource("../assets/luigiLeft.png"));
-            marioClimb = ImageIO.read(getClass().getResource("../assets/luigiClimb.png"));
+            marioRight = ImageIO.read(getClass().getResource("../assets/marioRight.png"));
+            marioLeft = ImageIO.read(getClass().getResource("../assets/marioLeft.png"));
+            marioClimb = ImageIO.read(getClass().getResource("../assets/marioClimb.png"));
             
             // Player - Luigi
             luigiRight = ImageIO.read(getClass().getResource("../assets/luigiRight.png"));
@@ -91,7 +99,11 @@ public class View extends JFrame implements Observer {
             // Barili
             barrelStack = ImageIO.read(getClass().getResource("../assets/barrelStack.png"));
             barrel = ImageIO.read(getClass().getResource("../assets/barrel.png"));
-
+            
+            // Vittoria/Sconfitta
+            gameover = new ImageIcon(getClass().getResource("../assets/gameOver.png"));
+            victory = new ImageIcon(getClass().getResource("../assets/victory.png"));
+            
         } catch (IOException e) {
             System.out.println("Immagine non trovata");
         }
@@ -109,7 +121,7 @@ public class View extends JFrame implements Observer {
         Player p2 = model.getPlayer2();
         
         if(model.isStartGame()) {
-        	if(model.isTimerFinished()) {
+        		if(model.isTimerFinished()) {
                 Heart h1 = model.getHeart1();
                 Heart h2 = model.getHeart2();
                 ShowNumber lf1 = model.getLifes1();
@@ -160,7 +172,7 @@ public class View extends JFrame implements Observer {
                 Floor f = model.getFloor();
                 g2.drawImage(floor, f.getX(), f.getY(), f.getWidth(), f.getHeight(), null);
                 
-        		// Draw delle scale
+        			// Draw delle scale
                 Ladder[] l = model.getLadders();
                 for (Ladder ld : l) {
                     g2.drawImage(ladder, ld.getX(), ld.getY(), ld.getWidth(), ld.getHeight(), null);
@@ -185,57 +197,72 @@ public class View extends JFrame implements Observer {
                 
                 g2.drawString(username2, rightEdge-username2Width, 28);
                 
-            	g2.setColor(Color.BLACK);
-            	
-            	// Draw del P1
-                if (p1.isMovingDx()) {
-                    g2.drawImage(marioRight, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
-                } else if (p1.isMovingSx()) {
-                    g2.drawImage(marioLeft, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
-                } else if (p1.isClimbing() || p1.isFalling()) {
-                    g2.drawImage(marioClimb, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
-                }
-                
-                // Draw del P2
-                if (p2.isMovingDx()) {
-                    g2.drawImage(marioRight, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
-                } else if (p2.isMovingSx()) {
-                    g2.drawImage(marioLeft, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
-                } else if (p2.isClimbing() || p2.isFalling()) {
-                    g2.drawImage(marioClimb, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
-                }
-
-                // Draw delle barre
-                Floor[] b = model.getBars();
-                for (Floor br : b) {
-                    g2.drawImage(bar, br.getX(), br.getY(), br.getWidth(), br.getHeight(), null);
-                }
-
-                // Draw di Kong
-                Kong k = model.getKong();
-                if (k.isGetting()) {
-                    g2.drawImage(kongGet, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
-                } else if (k.isFull()) {
-                    g2.drawImage(kongFull, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
-                } else if (k.isThrowing()) {
-                    g2.drawImage(kongThrow, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
-                }
-
-                // Draw di Peach
-                Peach pe = model.getPeach();
-                g2.drawImage(peach, pe.getX(), pe.getY(), pe.getWidth(), pe.getHeight(), null);
-
-                // Draw dello stack di barili
-                Barrel bs = model.getBarrelStack();
-                g2.drawImage(barrelStack, bs.getX(), bs.getY(), bs.getWidth(), bs.getHeight(), null);
-
-                // Draw dei barili
-                ArrayList<Barrel> br = model.getBarrels();
-                for (Barrel bl : br) {
-                    if (bl.isVisible()) {
-                        g2.drawImage(barrel, bl.getX(), bl.getY(), bl.getWidth(), bl.getHeight(), null);
-                    }
-                }
+	            	g2.setColor(Color.BLACK);
+	            	
+	            	// Draw del P1
+	                if (p1.isMovingDx()) {
+	                    g2.drawImage(marioRight, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
+	                } else if (p1.isMovingSx()) {
+	                    g2.drawImage(marioLeft, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
+	                } else if (p1.isClimbing() || p1.isFalling()) {
+	                    g2.drawImage(marioClimb, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
+	                }
+	                
+	                // Draw del P2
+	                if (p2.isMovingDx()) {
+	                    g2.drawImage(luigiRight, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
+	                } else if (p2.isMovingSx()) {
+	                    g2.drawImage(luigiLeft, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
+	                } else if (p2.isClimbing() || p2.isFalling()) {
+	                    g2.drawImage(luigiClimb, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
+	                }
+	
+	                // Draw delle barre
+	                Floor[] b = model.getBars();
+	                for (Floor br : b) {
+	                    g2.drawImage(bar, br.getX(), br.getY(), br.getWidth(), br.getHeight(), null);
+	                }
+	
+	                // Draw di Kong
+	                Kong k = model.getKong();
+	                if (k.isGetting()) {
+	                    g2.drawImage(kongGet, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
+	                } else if (k.isFull()) {
+	                    g2.drawImage(kongFull, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
+	                } else if (k.isThrowing()) {
+	                    g2.drawImage(kongThrow, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
+	                }
+	
+	                // Draw di Peach
+	                Peach pe = model.getPeach();
+	                g2.drawImage(peach, pe.getX(), pe.getY(), pe.getWidth(), pe.getHeight(), null);
+	
+	                // Draw dello stack di barili
+	                Barrel bs = model.getBarrelStack();
+	                g2.drawImage(barrelStack, bs.getX(), bs.getY(), bs.getWidth(), bs.getHeight(), null);
+	
+	                // Draw dei barili
+	                ArrayList<Barrel> br = model.getBarrels();
+	                for (Barrel bl : br) {
+	                    if (bl.isVisible()) {
+	                        g2.drawImage(barrel, bl.getX(), bl.getY(), bl.getWidth(), bl.getHeight(), null);
+	                    }
+	                }
+	                
+	                // Se il gioco è finito e non ho ancora mostrato il popup
+	                if (model.isGameOver1() && !popupShown) {
+	                    popupShown = true;
+	                    // Game Over
+	                    JOptionPane.showOptionDialog(null, "", "Game Over :(", 0, 0, gameover, quit, 0);
+	                    System.exit(0);
+	                } 
+	                // Se ho vinto e non ho ancora mostrato il popup
+	                else if (model.isGameWon1() && !popupShown) {
+	                    popupShown = true;
+	                    // Win
+	                    JOptionPane.showOptionDialog(null, "", "You Win!", 0, 0, victory, quit, 0);
+	                    System.exit(0);
+	                }
         	} else {
         		// Timer
         		ShowNumber t = model.getTimerNumber();
