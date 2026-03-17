@@ -5,17 +5,12 @@ import it.unibs.pajc.donkey_kong.entities.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
-import java.util.Random;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 
 public class Model extends Observable implements Serializable {
 
     public final int GameWidth = 750;  // Larghezza Finestra
     public final int GameHeight = 600; // Altezza Window
 
-    private Random random;
-    
     private boolean startGame = false;
     private boolean timerFinished = false;
 
@@ -24,6 +19,11 @@ public class Model extends Observable implements Serializable {
     
     private boolean gameOver2 = false;
     private boolean gameWon2 = false;
+    
+    private boolean gameQuitted1 = false;
+    private boolean gameQuitted2 = false;
+    
+    private boolean gamePaused = false;
     
     private Player player1;
     private Player player2;
@@ -116,17 +116,45 @@ public class Model extends Observable implements Serializable {
     public boolean isGameOver1() {
 		return gameOver1;
 	}
+    
+    public void setGameOver1(boolean gameOver1) {
+		this.gameOver1 = gameOver1;
+	}
 
 	public boolean isGameWon1() {
 		return gameWon1;
+	}
+	
+	public void setGameWon1(boolean gameWon1) {
+		this.gameWon1 = gameWon1;
 	}
 
 	public boolean isGameOver2() {
 		return gameOver2;
 	}
 
+	public void setGameOver2(boolean gameOver2) {
+		this.gameOver2 = gameOver2;
+	}
+
 	public boolean isGameWon2() {
 		return gameWon2;
+	}
+	
+	public void setGameWon2(boolean gameWon2) {
+		this.gameWon2 = gameWon2;
+	}
+	
+	public boolean isGamePaused() {
+		return gamePaused;
+	}
+
+	public void setGamePaused(boolean gamePaused) {
+		this.gamePaused = gamePaused;
+	}
+	
+	public void togglePaused() {
+		this.gamePaused = !this.gamePaused;
 	}
 
 	public Player getPlayer1() {
@@ -220,91 +248,49 @@ public class Model extends Observable implements Serializable {
     }
     
     public void update() {
-    	if(startGame) {
-    		if(timerFinished) {
-    			player1.update();
-    			player2.update();
-
-            for (Barrel barrel : barrels) {
-                barrel.update();
-            }
-
-            // Quando un barile muore viene eliminato
-            for (int i = 0; i < barrels.size(); i++) {
-                if (!(barrels.get(i).isAlive())) {
-                    barrels.remove(i);
-                }
-            }
-
-            // Se l'array di barili si svuota viene lanciato un altro barile che viene aggiunto all'array
-            if (barrels.size() < qta) {
-                barrels.add(new Barrel(kong.getX() - 100, 50, 20, 20, 3, 2));
-            }
-
-            collisions.update();
-            
-            /*
-            // Se il player1 muore il gioco finisce
-            if (!player1.isAlive()) {
-                // Game Over
-                setChanged();
-                notifyObservers();
-                JOptionPane.showOptionDialog(null, "", "Game Over :(", 0, 0, gameover, quit, 0);
-                System.exit(0);
-            }
-            
-            if (!player2.isAlive()) {
-                // Game Over
-                setChanged();
-                notifyObservers();
-                JOptionPane.showOptionDialog(null, "", "You Win!", 0, 0, victory, quit, 0);
-                System.exit(0);
-            }
-            
-            // Se il player1 raggiunge peach vince
-            if (player1.collides(peach)) {
-                // Win
-                JOptionPane.showOptionDialog(null, "", "You Win!", 0, 0, victory, quit, 0);
-                System.exit(0);
-            }
-            
-            if (player2.collides(peach)) {
-                // Win
-            	JOptionPane.showOptionDialog(null, "", "Game Over :(", 0, 0, gameover, quit, 0);
-                System.exit(0);
-            }
-            */
-            
-            if (!player1.isAlive() && !gameOver1) {
-                gameOver1 = true;
-                gameWon2 = true;
-            }
-            
-            if (player1.collides(peach) && !gameWon1) {
-                gameWon1 = true;
-                gameOver2 = true;
-            }
-            
-            if (!player2.isAlive() && !gameOver1) {
-                gameWon1 = true;
-                gameOver2 = true;
-            }
-            
-            if (player2.collides(peach) && !gameWon1) {
-                gameOver1 = true;
-                gameWon2 = true;
-            }
-            
-    		} else {
-    			// Timer
-    			if(timerNumber.getNumber() > 0) {
-        			timerNumber.setNumber(timerNumber.getNumber() - 1);
-    			} else {
-    				timerFinished = true;
-    			}
-    		}
-    		
-    	}
+    		if(startGame) {
+    			if(timerFinished) {
+    				if (!gamePaused) {
+		    			player1.update();
+		    			player2.update();
+		
+		            for (Barrel barrel : barrels) {
+		                barrel.update();
+		            }
+		
+		            // Quando un barile muore viene eliminato
+		            for (int i = 0; i < barrels.size(); i++) {
+		                if (!(barrels.get(i).isAlive())) {
+		                    barrels.remove(i);
+		                }
+		            }
+		
+		            // Se l'array di barili si svuota viene lanciato un altro barile che viene aggiunto all'array
+		            if (barrels.size() < qta) {
+		                barrels.add(new Barrel(kong.getX() - 100, 50, 20, 20, 3, 2));
+		            }
+		
+		            collisions.update();
+		            
+		            if ((!player1.isAlive() && !gameOver1) || (player2.collides(peach) && !gameWon1) || (gameQuitted1)) {
+		                gameOver1 = true;
+		                gameWon2 = true;
+		            }
+		            
+		            if ((player1.collides(peach) && !gameWon1) || (!player2.isAlive() && !gameOver1)) {
+		                gameWon1 = true;
+		                gameOver2 = true;
+		            }
+	    			}
+	    		} else {
+	    			// Timer
+	    			if(timerNumber.getNumber() > 0) {
+	        			timerNumber.setNumber(timerNumber.getNumber() - 1);
+	    			} else {
+	    				timerFinished = true;
+	    			}
+	    		}
+	    	}
 
         // Avvisa l'observer
         setChanged();
@@ -320,6 +306,8 @@ public class Model extends Observable implements Serializable {
 	    this.gameOver1 = model2.isGameOver2();
 	    this.gameWon1 = model2.isGameWon2();
 	    
+	    this.gamePaused = model2.isGamePaused();
+	    
 	    // Sincronizza gli altri giocatori/entità
 	    this.player2 = model2.getPlayer1();
 	    
@@ -332,7 +320,6 @@ public class Model extends Observable implements Serializable {
 	    this.kong = model2.getKong();
 	    this.barrels = model2.getBarrels();
 	    
-	    // SIAMO ARRIVATI QUA
 	    this.player1.update();
 	    this.player2.update();
 	    this.collisions.update();

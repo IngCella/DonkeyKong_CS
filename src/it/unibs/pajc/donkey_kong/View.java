@@ -52,7 +52,9 @@ public class View extends JFrame implements Observer {
     private Image barrel;
     private ImageIcon gameover;
     private ImageIcon victory;
+    private ImageIcon pause;
     
+    private String[] resume = {"Resume"};
     private String[] quit = {"Quit"};
 
     public View(Model model) {
@@ -103,6 +105,7 @@ public class View extends JFrame implements Observer {
             // Vittoria/Sconfitta
             gameover = new ImageIcon(getClass().getResource("../assets/gameOver.png"));
             victory = new ImageIcon(getClass().getResource("../assets/victory.png"));
+            pause = new ImageIcon(getClass().getResource("../assets/pause.png"));
             
         } catch (IOException e) {
             System.out.println("Immagine non trovata");
@@ -262,6 +265,24 @@ public class View extends JFrame implements Observer {
 	                    // Win
 	                    JOptionPane.showOptionDialog(null, "", "You Win!", 0, 0, victory, quit, 0);
 	                    System.exit(0);
+	                }
+	                
+	                // Pausa
+	                //if(model.isGamePaused()) {
+	                		//JOptionPane.showOptionDialog(null, "", "Pause", 0, 0, pause, resume, 0);
+	                		//model.setGamePaused(false);
+	                //}
+	                
+	                if (model.isGamePaused()) {
+	                    g2.setColor(new Color(0, 0, 0, 150)); 
+	                    g2.fillRect(0, 0, model.GameWidth, model.GameHeight);
+	                    
+	                    g2.setColor(Color.WHITE);
+	                    g2.setFont(new Font("Helvetica", Font.BOLD, 50));
+	                    String pauseText = "PAUSED";
+	                    fm = g2.getFontMetrics();
+	                    int testX = (model.GameWidth - fm.stringWidth(pauseText)) / 2;
+	                    g2.drawString(pauseText, testX, model.GameHeight / 2);
 	                }
         	} else {
         		// Timer

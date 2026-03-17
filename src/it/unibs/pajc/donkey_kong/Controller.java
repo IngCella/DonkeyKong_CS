@@ -24,9 +24,7 @@ public class Controller {
     private Terminal terminal;
     private boolean isServer = false;
 
-    String[] resume = {"Resume"};
     String[] quit = {"Quit"};
-    private ImageIcon pause = new ImageIcon(getClass().getResource("../assets/pause.png"));
     private ImageIcon gameover = new ImageIcon(getClass().getResource("../assets/gameOver.png"));
 
     private Timer delayTimer;
@@ -54,14 +52,14 @@ public class Controller {
         timer = new Timer(16, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	if(isServer && model.isStartGame() && model.isTimerFinished()) {
-            		model.update();
-                view.repaint();
-                
-                terminal.accept(new ModelMessage(model), null);
-            	} else if(!isServer) {
-            		terminal.accept(new ClientInputMessage(model.getPlayer1()), null);
-            	}
+	            	if(isServer && model.isStartGame() && model.isTimerFinished()) {
+	            		model.update();
+	                view.repaint();
+	                
+	                terminal.accept(new ModelMessage(model), null);
+	            	} else if(!isServer) {
+	            		terminal.accept(new ClientInputMessage(model.getPlayer1()), null);
+	            	}
             }
         });
 
@@ -140,6 +138,7 @@ public class Controller {
             @Override
             public void keyPressed(KeyEvent evt) {
                 if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                		// TODO
                     JOptionPane.showOptionDialog(null, "", "Game Over :(", 0, 0, gameover, quit, 0);
                     System.exit(0);
                 }
@@ -151,9 +150,14 @@ public class Controller {
             @Override
             public void keyPressed(KeyEvent evt) {
                 if (evt.getKeyCode() == KeyEvent.VK_P) {
-                    timer.stop();
-                    JOptionPane.showOptionDialog(null, "", "Pause", 0, 0, pause, resume, 0);
-                    timer.start();
+	                	if (isServer) {
+	                		System.out.println("PAUSA");
+	                	    model.togglePaused();
+	                	} else {
+	                	    if (terminal != null) {
+	                	        terminal.accept(new PauseMessage(), null);
+	                	    }
+	                	}
                 }
             }
         });
