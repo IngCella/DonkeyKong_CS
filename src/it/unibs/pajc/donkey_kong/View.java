@@ -105,7 +105,6 @@ public class View extends JFrame implements Observer {
             // Vittoria/Sconfitta
             gameover = new ImageIcon(getClass().getResource("../assets/gameOver.png"));
             victory = new ImageIcon(getClass().getResource("../assets/victory.png"));
-            pause = new ImageIcon(getClass().getResource("../assets/pause.png"));
             
         } catch (IOException e) {
             System.out.println("Immagine non trovata");

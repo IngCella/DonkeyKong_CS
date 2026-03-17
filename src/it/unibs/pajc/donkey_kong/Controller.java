@@ -138,9 +138,11 @@ public class Controller {
             @Override
             public void keyPressed(KeyEvent evt) {
                 if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                		// TODO
-                    JOptionPane.showOptionDialog(null, "", "Game Over :(", 0, 0, gameover, quit, 0);
-                    System.exit(0);
+	                	if(isServer) {
+	                		model.setGameQuitted1(true);
+	                	} else {
+	                		terminal.accept(new QuitMessage(), null);
+	                	}
                 }
             }
         });
@@ -154,9 +156,7 @@ public class Controller {
 	                		System.out.println("PAUSA");
 	                	    model.togglePaused();
 	                	} else {
-	                	    if (terminal != null) {
-	                	        terminal.accept(new PauseMessage(), null);
-	                	    }
+                	        terminal.accept(new PauseMessage(), null);
 	                	}
                 }
             }
@@ -166,7 +166,7 @@ public class Controller {
         view.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
+                if (evt.getKeyCode() == KeyEvent.VK_SPACE && !model.isGamePaused()) {
                     model.jump();
                 }
             }
@@ -176,7 +176,7 @@ public class Controller {
         view.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_RIGHT || evt.getKeyCode() == KeyEvent.VK_D) {
+                if ((evt.getKeyCode() == KeyEvent.VK_RIGHT || evt.getKeyCode() == KeyEvent.VK_D) && (!model.isGamePaused())) {
                     model.moveDx();
                 }
             }
@@ -186,7 +186,7 @@ public class Controller {
         view.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_LEFT || evt.getKeyCode() == KeyEvent.VK_A) {
+                if ((evt.getKeyCode() == KeyEvent.VK_LEFT || evt.getKeyCode() == KeyEvent.VK_A) && (!model.isGamePaused())) {
                     model.moveSx();
                 }
             }
@@ -196,7 +196,7 @@ public class Controller {
         view.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_W) {
+                if ((evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_W) && (!model.isGamePaused())) {
                     model.climb();
                 }
             }
@@ -206,7 +206,7 @@ public class Controller {
         view.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_DOWN || evt.getKeyCode() == KeyEvent.VK_S) {
+                if ((evt.getKeyCode() == KeyEvent.VK_DOWN || evt.getKeyCode() == KeyEvent.VK_S) && (!model.isGamePaused())) {
                     model.fall();
                 }
             }

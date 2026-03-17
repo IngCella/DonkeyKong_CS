@@ -3,7 +3,10 @@ package it.unibs.pajc.setup;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -107,12 +110,43 @@ public class ModelSetup {
     }
     
     public ModelSetup() {
-    	
-    	try {
+	    	try {
             this.serverIP = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException ex) {
             Logger.getLogger(ModelSetup.class.getName()).log(Level.SEVERE, null, ex);
         }
-    	
+	    	
+	    	this.serverIP = getWifiIpAddress();
+    }
+    
+    public String getWifiIpAddress() {
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            
+            for (NetworkInterface netInt : Collections.list(interfaces)) {
+                if (netInt.isUp() && !netInt.isLoopback()) {
+                    String name = netInt.getDisplayName().toLowerCase();
+                    if (name.contains("wi-fi") || name.contains("wlan") || name.contains("802.11")) {
+                        Enumeration<InetAddress> addresses = netInt.getInetAddresses();
+                        for (InetAddress addr : Collections.list(addresses)) {
+                            if (addr.getHostAddress().contains(".")) {
+                                return addr.getHostAddress();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        try {
+			return InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+		
+		return null;
     }
 }

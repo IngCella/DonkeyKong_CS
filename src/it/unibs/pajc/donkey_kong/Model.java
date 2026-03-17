@@ -145,6 +145,22 @@ public class Model extends Observable implements Serializable {
 		this.gameWon2 = gameWon2;
 	}
 	
+	public boolean isGameQuitted1() {
+		return gameQuitted1;
+	}
+
+	public void setGameQuitted1(boolean gameQuitted1) {
+		this.gameQuitted1 = gameQuitted1;
+	}
+
+	public boolean isGameQuitted2() {
+		return gameQuitted2;
+	}
+
+	public void setGameQuitted2(boolean gameQuitted2) {
+		this.gameQuitted2 = gameQuitted2;
+	}
+
 	public boolean isGamePaused() {
 		return gamePaused;
 	}
@@ -277,7 +293,7 @@ public class Model extends Observable implements Serializable {
 		                gameWon2 = true;
 		            }
 		            
-		            if ((player1.collides(peach) && !gameWon1) || (!player2.isAlive() && !gameOver1)) {
+		            if ((player1.collides(peach) && !gameWon1) || (!player2.isAlive() && !gameOver1) || (gameQuitted2)) {
 		                gameWon1 = true;
 		                gameOver2 = true;
 		            }
@@ -299,12 +315,13 @@ public class Model extends Observable implements Serializable {
     
     public void sync(Model model2) {
     	
-	    // Sincronizza lo stato dei timer
+	    // Sincronizza lo stato dei timer e della partita
 	    this.timerNumber.setNumber(model2.getTimerNumber().getNumber());
 	    this.timerFinished = model2.isTimerFinished();
 
 	    this.gameOver1 = model2.isGameOver2();
 	    this.gameWon1 = model2.isGameWon2();
+	    this.gameQuitted1 = model2.isGameQuitted2();
 	    
 	    this.gamePaused = model2.isGamePaused();
 	    
