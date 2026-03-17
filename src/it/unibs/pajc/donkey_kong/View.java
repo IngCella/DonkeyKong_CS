@@ -130,8 +130,10 @@ public class View extends JFrame implements Observer {
                 ShowNumber lf2 = model.getLifes2();
                 
                 // Lifes e Heart dei players
-                if (p1.getLifes() != 0) {
+                if (p1.getLifes() > 0) {
                     g2.drawImage(heart, h1.getX(), h1.getY(), h1.getWidth(), h1.getHeight(), null);
+                } else {
+                		g2.drawImage(brokenHeart, h1.getX() - 4, h1.getY() - 3, h1.getWidth() + 9, h1.getHeight() + 9, null);
                 }
                 
                 switch (p1.getLifes()) {
@@ -146,12 +148,13 @@ public class View extends JFrame implements Observer {
                         break;
                     default:
                         g2.drawImage(zero, lf1.getX(), lf1.getY(), lf1.getWidth(), lf1.getHeight(), null);
-                        g2.drawImage(brokenHeart, h1.getX() - 4, h1.getY() - 3, h1.getWidth() + 9, h1.getHeight() + 9, null);
                         break;
                 }
                 
-                if(p2.getLifes() != 0) {
-                	g2.drawImage(heart, h2.getX(), h2.getY(), h2.getWidth(), h2.getHeight(), null);
+                if(p2.getLifes() > 0) {
+                		g2.drawImage(heart, h2.getX(), h2.getY(), h2.getWidth(), h2.getHeight(), null);
+                } else {
+                		g2.drawImage(brokenHeart, h2.getX() - 4, h2.getY() - 3, h2.getWidth() + 9, h2.getHeight() + 9, null);
                 }
                 
                 switch (p2.getLifes()) {
@@ -166,7 +169,6 @@ public class View extends JFrame implements Observer {
 	                    break;
 	                default:
 	                    g2.drawImage(zero, lf2.getX(), lf2.getY(), lf2.getWidth(), lf2.getHeight(), null);
-	                    g2.drawImage(brokenHeart, h2.getX() - 4, h2.getY() - 3, h2.getWidth() + 9, h2.getHeight() + 9, null);
 	                    break;
                 }
                 
