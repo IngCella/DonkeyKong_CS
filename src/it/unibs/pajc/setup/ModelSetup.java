@@ -15,17 +15,17 @@ public class ModelSetup {
     private transient final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
     // Client
-    private String clientUsername = "Bazo";
+    private String clientUsername = "";
     public static final String PROP_CLIENTUSERNAME = "clientUsername";
     
-    private String clientIP = "127.0.0.1";
+    private String clientIP = "";
     public static final String PROP_CLIENTIP = "clientIP";
     
     private int clientPort = 55555;
     public static final String PROP_CLIENTPORT = "clientPort";
     
     // Server
-    private String serverUsername = "Celli";
+    private String serverUsername = "";
     public static final String PROP_SERVERUSERNAME = "serverUsername";
     
     private String serverIP = "127.0.0.1";

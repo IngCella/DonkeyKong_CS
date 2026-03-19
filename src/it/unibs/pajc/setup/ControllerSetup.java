@@ -23,6 +23,10 @@ public class ControllerSetup {
         viewSetup.setVisible(b);
     }
     
+    public void connectionFailed() {
+    	// TODO
+    }
+    
     // Getters Client
     public String getClientName(){
         return viewSetup.getClientUsername();

@@ -122,19 +122,23 @@ public class Controller {
             		String ip = controllerSetup.getClientIP();
             		
             		if(username != null && port != 0 && ip != null) {
-            			terminal = new Client("Client", ip ,port, receiver);
-            	        terminal.start();
+            			try {
+            				terminal = new Client("Client", ip ,port, receiver);
+                	        terminal.start();
 
-            	        isServer = false;
-            	        
-            	        model.getPlayer1().setUsername(username);
-            	        model.setStartGame(true);
-            	        
-                		controllerSetup.setVisible(false);
-                		view.setVisible(true);
+                	        isServer = false;
+                	        
+                	        model.getPlayer1().setUsername(username);
+                	        model.setStartGame(true);
+                	        
+                    		controllerSetup.setVisible(false);
+                    		view.setVisible(true);
 
-                		delayTimer.start();
-                		timer.start();
+                    		delayTimer.start();
+                    		timer.start();
+						} catch (Exception e) {
+							controllerSetup.connectionFailed();
+						}
             		}
             }
         });
