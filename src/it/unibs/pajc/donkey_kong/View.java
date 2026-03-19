@@ -269,11 +269,6 @@ public class View extends JFrame implements Observer {
 	                }
 	                
 	                // Pausa
-	                //if(model.isGamePaused()) {
-	                		//JOptionPane.showOptionDialog(null, "", "Pause", 0, 0, pause, resume, 0);
-	                		//model.setGamePaused(false);
-	                //}
-	                
 	                if (model.isGamePaused()) {
 	                    g2.setColor(new Color(0, 0, 0, 150)); 
 	                    g2.fillRect(0, 0, model.GameWidth, model.GameHeight);
@@ -339,6 +334,14 @@ public class View extends JFrame implements Observer {
 		this.serverPort = serverPort;
 	}
 	
+	public boolean isPopupShown() {
+		return popupShown;
+	}
+
+	public void setPopupShown(boolean popupShown) {
+		this.popupShown = popupShown;
+	}
+
 	public Point calculateTextPosition(String string, FontMetrics metrics) {
 		// Calcola la coordinata X per centrare
         int x = (getWidth() - metrics.stringWidth(string)) / 2;

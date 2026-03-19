@@ -24,7 +24,6 @@ public class Terminal extends Thread implements Receiver {
         // In pratica quando il main() termina il Server/Client viene chiuso anche se è ancora in ascolto
     }
 
-    // 
     @Override
     public void run() {
         Message message;
@@ -67,13 +66,29 @@ public class Terminal extends Thread implements Receiver {
                 System.out.println("Invio di messaggio, ma l'altro non c'è");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+        	System.out.println("Errore durante l'invio del messaggio: " + e.getMessage());
         }
     }
 
     public void close() {
-        accept(null, null);
-        isClosed = true;
+        try {
+            isClosed = true;
+            this.interrupt(); // Interrompe il thread
+            
+            if (output != null) {
+            	output.close();
+            }
+            if (input != null) {
+            	input.close();
+            }
+            if (socket != null && !socket.isClosed()) {
+            	socket.close();
+            }
+            
+            System.out.println("Connessione chiusa correttamente.");
+        } catch (IOException e) {
+            System.out.println("Errore durante la chiusura del terminale: " + e.getMessage());
+        }
     }
 
 }

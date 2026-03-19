@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -59,6 +61,10 @@ public class Controller {
 	                terminal.accept(new ModelMessage(model), null);
 	            	} else if(!isServer) {
 	            		terminal.accept(new ClientInputMessage(model.getPlayer1()), null);
+	            	}
+	            	
+	            	if(view.isPopupShown()) {
+	            		disconnect();
 	            	}
             }
         });
@@ -212,5 +218,29 @@ public class Controller {
             }
         });
         
+        view.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                disconnect();
+                System.exit(0);
+            }
+        });
+        
+    }
+    
+    public void disconnect() {
+        if (terminal != null) {
+            terminal.accept(new QuitMessage(), null); 
+            terminal.close();
+        }
+        
+        // Ferma i timer
+        if (timer != null) {
+        	timer.stop();
+        }
+        
+        if (delayTimer != null) {
+        	delayTimer.stop();
+        }
     }
 }
