@@ -90,26 +90,26 @@ public class Controller {
         controllerSetup.addBtnStartListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-        		int port = controllerSetup.getServerPort();
-        		String username = controllerSetup.getServerName();
-        		String ip = controllerSetup.getServerIP();
-        		
-        		if(port != 0 && username != null) {
-        			terminal = new Server("Server", port, receiver);
-        			terminal.start();
-        			
-        			isServer = true;
-        			
-        			model.getPlayer1().setUsername(username);
-        			
-        			view.setServerIpAddress(ip);
-        			view.setServerPort(port);
-            		controllerSetup.setVisible(false);
-            		view.setVisible(true);
-            		
-            		delayTimer.start();
-            		timer.start();
-        		}
+	        		int port = controllerSetup.getServerPort();
+	        		String username = controllerSetup.getServerName();
+	        		String ip = controllerSetup.getServerIP();
+	        		
+	        		if(port != 0 && username != null) {
+	        			terminal = new Server("Server", port, receiver);
+	        			terminal.start();
+	        			
+	        			isServer = true;
+	        			
+	        			model.getPlayer1().setUsername(username);
+	        			
+	        			view.setServerIpAddress(ip);
+	        			view.setServerPort(port);
+	            		controllerSetup.setVisible(false);
+	            		view.setVisible(true);
+	            		
+	            		delayTimer.start();
+	            		timer.start();
+	        		}
             }
         });
         
@@ -124,21 +124,33 @@ public class Controller {
             		if(username != null && port != 0 && ip != null) {
             			try {
             				terminal = new Client("Client", ip ,port, receiver);
-                	        terminal.start();
+        					terminal.start();
+        					
+        					Thread.sleep(1000);
+        					
+            				if(terminal.isAlive(terminal.socket)) {
+            					System.out.println("La connessione si è instaurata");
+            					
 
-                	        isServer = false;
-                	        
-                	        model.getPlayer1().setUsername(username);
-                	        model.setStartGame(true);
-                	        
-                    		controllerSetup.setVisible(false);
-                    		view.setVisible(true);
+                    	        isServer = false;
+                    	        
+                    	        model.getPlayer1().setUsername(username);
+                    	        model.setStartGame(true);
+                    	        
+                        		controllerSetup.setVisible(false);
+                        		view.setVisible(true);
 
-                    		delayTimer.start();
-                    		timer.start();
-						} catch (Exception e) {
-							controllerSetup.connectionFailed();
-						}
+                        		delayTimer.start();
+                        		timer.start();
+            					
+            				} else {
+            					System.out.println("Nessuna connessione");
+            				}
+            				
+            				
+					} catch (Exception e) {
+						controllerSetup.connectionFailed();
+					}
             		}
             }
         });

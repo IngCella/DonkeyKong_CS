@@ -3,11 +3,14 @@ package it.unibs.pajc.setup;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 
 public class ViewSetup {
 
@@ -15,6 +18,8 @@ public class ViewSetup {
     
 	private CardLayout cardLayout;
     private JPanel mainPanel;
+    
+    private Image icon;
     
     private PnlServer pnlServer;
     private PnlClient pnlClient;
@@ -29,6 +34,13 @@ public class ViewSetup {
 	public ViewSetup(ModelSetup model) {
 		initialize();
 		this.model = model;
+		
+		try {
+			icon = ImageIO.read(getClass().getResource("../assets/marioVsDonkeyKong.jpg"));
+	        frame.setIconImage(icon);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		pnlClient.getTxtClientUsername().setText(model.getClientUsername());
 		pnlClient.getTxtClientIP().setText(model.getClientIP());

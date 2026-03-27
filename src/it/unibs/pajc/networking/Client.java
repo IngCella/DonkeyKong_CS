@@ -20,7 +20,8 @@ public class Client extends Terminal {
             super.run(); // Chiama il metodo run di terminal (avviando il loop di ricezione dei messaggi)
         }
         catch (IOException e) {
-            e.printStackTrace();
+        	    // TODO:
+            //e.printStackTrace();
         }
     }
 }

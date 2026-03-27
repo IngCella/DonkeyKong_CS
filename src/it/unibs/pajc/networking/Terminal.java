@@ -10,7 +10,7 @@ import java.net.Socket;
 public class Terminal extends Thread implements Receiver {
 
     protected int port; // Porta sulla quale avviene la comunicazione
-    protected Socket socket; // Socket
+    public Socket socket; // Socket
     protected ObjectOutputStream output; // Stream per mandare oggetti serializzabili in output
     protected ObjectInputStream input; // Stream per ricevere oggetti serializzabili in input
     protected Receiver destination; // Ricevitore del messaggio
@@ -47,7 +47,7 @@ public class Terminal extends Thread implements Receiver {
             // Chiudi la connessione
             isClosed = true;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Attenzione, avversario disconnesso.");
         }
     }
 
@@ -66,7 +66,7 @@ public class Terminal extends Thread implements Receiver {
                 System.out.println("Invio di messaggio, ma l'altro non c'è");
             }
         } catch (IOException e) {
-        	System.out.println("Errore durante l'invio del messaggio: " + e.getMessage());
+        		System.out.println("Errore durante l'invio del messaggio: " + e.getMessage());
         }
     }
 
@@ -91,4 +91,9 @@ public class Terminal extends Thread implements Receiver {
         }
     }
 
+    public boolean isAlive(Socket socket) {
+        return socket != null 
+            //&& socket.isConnected() 
+            && !socket.isClosed();
+    }
 }

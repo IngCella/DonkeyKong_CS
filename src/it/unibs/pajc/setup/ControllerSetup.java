@@ -2,6 +2,8 @@ package it.unibs.pajc.setup;
 
 import java.awt.event.ActionListener;
 
+import javax.swing.JOptionPane;
+
 public class ControllerSetup {
     private final ModelSetup modelSetup;
     private final ViewSetup viewSetup;
@@ -24,7 +26,8 @@ public class ControllerSetup {
     }
     
     public void connectionFailed() {
-    	// TODO
+    		// TODO
+    		System.out.println("E invece ci sei arrivato");
     }
     
     // Getters Client
