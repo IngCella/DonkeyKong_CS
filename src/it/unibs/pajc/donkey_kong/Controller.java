@@ -122,35 +122,33 @@ public class Controller {
             		String ip = controllerSetup.getClientIP();
             		
             		if(username != null && port != 0 && ip != null) {
-            			try {
-            				terminal = new Client("Client", ip ,port, receiver);
-        					terminal.start();
-        					
-        					Thread.sleep(1000);
-        					
-            				if(terminal.isAlive(terminal.socket)) {
-            					System.out.println("La connessione si è instaurata");
-            					
-
-                    	        isServer = false;
-                    	        
-                    	        model.getPlayer1().setUsername(username);
-                    	        model.setStartGame(true);
-                    	        
-                        		controllerSetup.setVisible(false);
-                        		view.setVisible(true);
-
-                        		delayTimer.start();
-                        		timer.start();
-            					
-            				} else {
-            					System.out.println("Nessuna connessione");
-            				}
-            				
-            				
-					} catch (Exception e) {
-						controllerSetup.connectionFailed();
+        				terminal = new Client("Client", ip ,port, receiver);
+    					terminal.start();
+    					
+    					// Attendi un attimo per controllare se è riuscito a connettersi
+    					try {
+						Thread.sleep(1500);
+					} catch (InterruptedException e) {
+						System.out.println("Errore sleep: " + e.getMessage());
 					}
+    					
+        				if(terminal.isAlive(terminal.socket)) {
+        					System.out.println("Connessione instaurata");
+
+                	        isServer = false;
+                	        
+                	        model.getPlayer1().setUsername(username);
+                	        model.setStartGame(true);
+                	        
+                    		controllerSetup.setVisible(false);
+                    		view.setVisible(true);
+
+                    		delayTimer.start();
+                    		timer.start();
+        					
+        				} else {
+        					System.out.println("Attenzione: Server inesistente al momento");
+        				}
             		}
             }
         });
@@ -252,11 +250,11 @@ public class Controller {
         
         // Ferma i timer
         if (timer != null) {
-        	timer.stop();
+        		timer.stop();
         }
         
         if (delayTimer != null) {
-        	delayTimer.stop();
+        		delayTimer.stop();
         }
     }
 }

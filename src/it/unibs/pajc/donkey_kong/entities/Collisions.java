@@ -19,16 +19,6 @@ public class Collisions implements Serializable {
 
     public Collisions(Model model) {
         this.model = model;
-        
-        /*
-        player1 = model.getPlayer1();
-		player2 = model.getPlayer2();
-        kong = model.getKong();
-        floor = model.getFloor();
-        bars = model.getBars();
-        ladders = model.getLadders();
-        barrels = model.getBarrels();
-        */
     }
     
     // Metodo per verificare che un oggetto tocchi almeno un pavimento

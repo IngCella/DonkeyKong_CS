@@ -47,7 +47,7 @@ public class Terminal extends Thread implements Receiver {
             // Chiudi la connessione
             isClosed = true;
         } catch (Exception e) {
-            System.out.println("Attenzione, avversario disconnesso.");
+            System.out.println("Attenzione: avversario disconnesso.");
         }
     }
 
@@ -66,7 +66,7 @@ public class Terminal extends Thread implements Receiver {
                 System.out.println("Invio di messaggio, ma l'altro non c'è");
             }
         } catch (IOException e) {
-        		System.out.println("Errore durante l'invio del messaggio: " + e.getMessage());
+        		System.out.println("Attenzione: " + e.getMessage());
         }
     }
 
@@ -87,13 +87,11 @@ public class Terminal extends Thread implements Receiver {
             
             System.out.println("Connessione chiusa correttamente.");
         } catch (IOException e) {
-            System.out.println("Errore durante la chiusura del terminale: " + e.getMessage());
+            System.out.println("Chiusura del terminale: " + e.getMessage());
         }
     }
 
     public boolean isAlive(Socket socket) {
-        return socket != null 
-            //&& socket.isConnected() 
-            && !socket.isClosed();
+        return socket != null && !socket.isClosed();
     }
 }

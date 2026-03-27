@@ -20,8 +20,7 @@ public class Client extends Terminal {
             super.run(); // Chiama il metodo run di terminal (avviando il loop di ricezione dei messaggi)
         }
         catch (IOException e) {
-        	    // TODO:
-            //e.printStackTrace();
+            System.out.println("Tentativo di connessione in corso...");
         }
     }
 }

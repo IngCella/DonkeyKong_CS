@@ -14,8 +14,6 @@ public class ModelMessage implements Message<Model> {
 	// Apro il messaggio e aggiorno il model con il contenuto
 	@Override
 	public void open(Model model, Receiver sender) {
-		//System.out.println("Arrivato"); // Debug
-	    
 		model.setStartGame(true);
 		model.sync(this.model);
 	}

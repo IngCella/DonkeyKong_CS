@@ -113,7 +113,7 @@ public class View extends JFrame implements Observer {
 
     public void paintStage(Graphics g) {
         // Draw dello sfondo
-    	Graphics2D g2 = (Graphics2D) g;
+    		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     	
         g2.setColor(Color.BLACK);
@@ -204,82 +204,82 @@ public class View extends JFrame implements Observer {
 	            	g2.setColor(Color.BLACK);
 	            	
 	            	// Draw del P1
-	                if (p1.isMovingDx()) {
-	                    g2.drawImage(marioRight, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
-	                } else if (p1.isMovingSx()) {
-	                    g2.drawImage(marioLeft, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
-	                } else if (p1.isClimbing() || p1.isFalling()) {
-	                    g2.drawImage(marioClimb, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
+	            if (p1.isMovingDx()) {
+	                g2.drawImage(marioRight, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
+	            } else if (p1.isMovingSx()) {
+	                g2.drawImage(marioLeft, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
+	            } else if (p1.isClimbing() || p1.isFalling()) {
+	                g2.drawImage(marioClimb, p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight(), null);
+	            }
+	            
+	            // Draw del P2
+	            if (p2.isMovingDx()) {
+	                g2.drawImage(luigiRight, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
+	            } else if (p2.isMovingSx()) {
+	                g2.drawImage(luigiLeft, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
+	            } else if (p2.isClimbing() || p2.isFalling()) {
+	                g2.drawImage(luigiClimb, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
+	            }
+	
+	            // Draw delle barre
+	            Floor[] b = model.getBars();
+	            for (Floor br : b) {
+	                g2.drawImage(bar, br.getX(), br.getY(), br.getWidth(), br.getHeight(), null);
+	            }
+	
+	            // Draw di Kong
+	            Kong k = model.getKong();
+	            if (k.isGetting()) {
+	                g2.drawImage(kongGet, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
+	            } else if (k.isFull()) {
+	                g2.drawImage(kongFull, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
+	            } else if (k.isThrowing()) {
+	                g2.drawImage(kongThrow, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
+	            }
+	
+	            // Draw di Peach
+	            Peach pe = model.getPeach();
+	            g2.drawImage(peach, pe.getX(), pe.getY(), pe.getWidth(), pe.getHeight(), null);
+	
+	            // Draw dello stack di barili
+	            Barrel bs = model.getBarrelStack();
+	            g2.drawImage(barrelStack, bs.getX(), bs.getY(), bs.getWidth(), bs.getHeight(), null);
+	
+	            // Draw dei barili
+	            ArrayList<Barrel> br = model.getBarrels();
+	            for (Barrel bl : br) {
+	                if (bl.isVisible()) {
+	                    g2.drawImage(barrel, bl.getX(), bl.getY(), bl.getWidth(), bl.getHeight(), null);
 	                }
+	            }
+	            
+	            // Se il gioco è finito e non ho ancora mostrato il popup
+	            if (model.isGameOver1() && !popupShown) {
+	                popupShown = true;
+	                // Game Over
+	                JOptionPane.showOptionDialog(null, "", "Game Over :(", 0, 0, gameover, quit, 0);
+	                System.exit(0);
+	            } 
+	            // Se ho vinto e non ho ancora mostrato il popup
+	            else if (model.isGameWon1() && !popupShown) {
+	                popupShown = true;
+	                // Win
+	                JOptionPane.showOptionDialog(null, "", "You Win!", 0, 0, victory, quit, 0);
+	                System.exit(0);
+	            }
+	            
+	            // Pausa
+	            if (model.isGamePaused()) {
+	                g2.setColor(new Color(0, 0, 0, 150)); 
+	                g2.fillRect(0, 0, model.GameWidth, model.GameHeight);
 	                
-	                // Draw del P2
-	                if (p2.isMovingDx()) {
-	                    g2.drawImage(luigiRight, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
-	                } else if (p2.isMovingSx()) {
-	                    g2.drawImage(luigiLeft, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
-	                } else if (p2.isClimbing() || p2.isFalling()) {
-	                    g2.drawImage(luigiClimb, p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight(), null);
-	                }
-	
-	                // Draw delle barre
-	                Floor[] b = model.getBars();
-	                for (Floor br : b) {
-	                    g2.drawImage(bar, br.getX(), br.getY(), br.getWidth(), br.getHeight(), null);
-	                }
-	
-	                // Draw di Kong
-	                Kong k = model.getKong();
-	                if (k.isGetting()) {
-	                    g2.drawImage(kongGet, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
-	                } else if (k.isFull()) {
-	                    g2.drawImage(kongFull, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
-	                } else if (k.isThrowing()) {
-	                    g2.drawImage(kongThrow, k.getX(), k.getY(), k.getWidth(), k.getHeight(), null);
-	                }
-	
-	                // Draw di Peach
-	                Peach pe = model.getPeach();
-	                g2.drawImage(peach, pe.getX(), pe.getY(), pe.getWidth(), pe.getHeight(), null);
-	
-	                // Draw dello stack di barili
-	                Barrel bs = model.getBarrelStack();
-	                g2.drawImage(barrelStack, bs.getX(), bs.getY(), bs.getWidth(), bs.getHeight(), null);
-	
-	                // Draw dei barili
-	                ArrayList<Barrel> br = model.getBarrels();
-	                for (Barrel bl : br) {
-	                    if (bl.isVisible()) {
-	                        g2.drawImage(barrel, bl.getX(), bl.getY(), bl.getWidth(), bl.getHeight(), null);
-	                    }
-	                }
-	                
-	                // Se il gioco è finito e non ho ancora mostrato il popup
-	                if (model.isGameOver1() && !popupShown) {
-	                    popupShown = true;
-	                    // Game Over
-	                    JOptionPane.showOptionDialog(null, "", "Game Over :(", 0, 0, gameover, quit, 0);
-	                    System.exit(0);
-	                } 
-	                // Se ho vinto e non ho ancora mostrato il popup
-	                else if (model.isGameWon1() && !popupShown) {
-	                    popupShown = true;
-	                    // Win
-	                    JOptionPane.showOptionDialog(null, "", "You Win!", 0, 0, victory, quit, 0);
-	                    System.exit(0);
-	                }
-	                
-	                // Pausa
-	                if (model.isGamePaused()) {
-	                    g2.setColor(new Color(0, 0, 0, 150)); 
-	                    g2.fillRect(0, 0, model.GameWidth, model.GameHeight);
-	                    
-	                    g2.setColor(Color.WHITE);
-	                    g2.setFont(new Font("Helvetica", Font.BOLD, 50));
-	                    String pauseText = "PAUSED";
-	                    fm = g2.getFontMetrics();
-	                    int testX = (model.GameWidth - fm.stringWidth(pauseText)) / 2;
-	                    g2.drawString(pauseText, testX, model.GameHeight / 2);
-	                }
+	                g2.setColor(Color.WHITE);
+	                g2.setFont(new Font("Helvetica", Font.BOLD, 50));
+	                String pauseText = "PAUSED";
+	                fm = g2.getFontMetrics();
+	                int testX = (model.GameWidth - fm.stringWidth(pauseText)) / 2;
+	                g2.drawString(pauseText, testX, model.GameHeight / 2);
+	            }
         	} else {
         		// Timer
         		ShowNumber t = model.getTimerNumber();
@@ -300,7 +300,7 @@ public class View extends JFrame implements Observer {
         	}
         	
         } else {
-        	// Il client non si è ancora  connesso
+        		// Il client non si è ancora  connesso
             Font font = new Font("Monospaced", Font.BOLD, 60);
             g2.setFont(font);
             g2.setColor(Color.ORANGE);
